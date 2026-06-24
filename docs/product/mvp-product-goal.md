@@ -2,7 +2,7 @@
 
 ## Goal
 
-Ship a private Rails-first MVP that helps a parent create child profiles, respond to daily prompts, preserve text and voice memories, review a timeline, and receive gentle AI-assisted reflections.
+Ship a private Rails-first MVP that helps a parent create child profiles, build a meaningful daily conversation ritual, preserve text and voice memories, review a timeline, and receive gentle AI-assisted reflections.
 
 ## MVP Scope
 
@@ -10,10 +10,11 @@ The MVP includes:
 
 - Parent accounts
 - Child profiles
-- Daily questions
+- Daily question system
+- Prompt library
 - Text responses
 - Voice recordings
-- Timeline
+- Timeline view
 - Memory archive
 - Basic AI summaries
 - Monthly reflection letter
@@ -44,6 +45,16 @@ The MVP succeeds if a parent can consistently preserve meaningful child memories
 
 ## Out Of Scope Until After MVP
 
+- Temperament profiles
+- Personality graphs
+- Advanced personalization
+- Gifting
+- Printed books
+- Multiple family members
+- Grandparent accounts
+- Educational recommendations
+- Child developmental assessments
+- Social features
 - Multi-household permissions
 - Sharing outside the parent account
 - Public links

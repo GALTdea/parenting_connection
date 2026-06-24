@@ -8,7 +8,22 @@ This repository is the durable memory for the Parent-Child Connection App. AI ch
 
 Does this help parents connect with their children, understand who they are becoming, or preserve meaningful memories?
 
+Product formula:
+
+Conversation -> Connection -> Understanding -> Memory -> Legacy
+
 If a proposed change does not clearly support that north star, pause and update the relevant product or feature documentation before implementing it.
+
+## Conflict Hierarchy
+
+When durable docs or tool instructions appear to conflict, resolve product work in this order:
+
+1. Product safety and privacy constraints
+2. Product north star
+3. MVP goal
+4. Relevant feature brief
+5. General AI development process
+6. Tool preferences
 
 ## Development Posture
 
@@ -16,20 +31,27 @@ If a proposed change does not clearly support that north star, pause and update 
 - Hotwire-compatible UI. Build server-rendered Rails views that work well with Turbo and Stimulus.
 - Mobile-aware from the beginning. The web app should be ready for an eventual Hotwire Native iOS/Android wrapper.
 - Artifact-driven AI development. Meaningful changes require durable artifacts: feature briefs, architecture notes, verification notes, and decision records.
+- Challenge scope before building. Ask whether the feature can be smaller, simpler, postponed, or removed.
 - Parent-reviewed AI. AI output may support reflection, summarization, and memory retrieval, but parents remain in control of what is saved, shown, shared, or sent.
 - Gentle, non-clinical, non-diagnostic language. The app may help parents notice patterns and preserve memories; it must not diagnose children, score parenting, or make medical/psychological claims.
 - Privacy and child data protection are core constraints, not later hardening work.
 
-## Required Workflow
+## Required Reading Order
 
 Before making a meaningful product or architecture change:
 
 1. Read this file.
-2. Read `docs/process/ai-dev-flow.md`.
-3. Read `docs/process/verification.md`.
-4. Read `docs/product/product-principles.md`.
-5. Read the active feature brief in `docs/features/active/`.
-6. If no feature brief exists for the requested work, create or update one before coding.
+2. Read `docs/product/mvp-product-goal.md`.
+3. Read `docs/product/product-principles.md`.
+4. Read `docs/features/_constraints.md`.
+5. Read the relevant active feature brief in `docs/features/active/`.
+6. Read relevant architecture docs.
+7. Read `docs/process/ai-dev-flow.md`.
+8. Read `docs/process/verification.md`.
+9. Read `docs/process/prompting.md` when shaping an AI task.
+10. Read `docs/process/handoff.md` before finalizing an AI-assisted task.
+
+If no feature brief exists for a meaningful change, create or update one before coding.
 
 Do not implement a meaningful feature from chat context alone.
 
@@ -39,10 +61,11 @@ The MVP is centered on:
 
 - Parent accounts
 - Child profiles
-- Daily questions
+- Daily question system
+- Prompt library
 - Text responses
 - Voice recordings
-- Timeline
+- Timeline view
 - Memory archive
 - Basic AI summaries
 - Monthly reflection letter
@@ -105,6 +128,8 @@ bin/rails db:prepare
 | File | Purpose |
 | --- | --- |
 | `docs/process/ai-dev-flow.md` | How AI-assisted work moves from prompt to durable artifact to implementation |
+| `docs/process/prompting.md` | How to prompt AI tools for this repo without overbuilding |
+| `docs/process/handoff.md` | Required trail after AI-assisted work |
 | `docs/process/verification.md` | Verification expectations by type of change |
 | `docs/product/strategy-2026.md` | Product strategy, audience, bets, and non-goals |
 | `docs/product/mvp-product-goal.md` | MVP scope and success definition |
@@ -116,13 +141,16 @@ bin/rails db:prepare
 | `docs/architecture/data-model.md` | Durable data model direction |
 | `docs/architecture/ai-architecture.md` | AI responsibilities, boundaries, and review model |
 | `docs/architecture/mobile-strategy.md` | Hotwire Native direction and mobile constraints |
+| `docs/decisions/adr-template.md` | Lightweight template for meaningful decision records |
 | `docs/decisions/` | Decision records for choices that should survive chat history |
 
 ## What Not To Do
 
 - Do not implement application features without a relevant feature brief.
+- Do not skip the Challenge step for meaningful changes.
 - Do not create models, controllers, migrations, or jobs as placeholders.
 - Do not use AI output as a clinical, diagnostic, or parenting-score authority.
+- Do not turn the app into a tracker, dashboard, clinical tool, optimization product, or generic AI app.
 - Do not expose child data to third-party services without an explicit architecture note and privacy review.
 - Do not build UI that depends on hover-only interactions or desktop-only workflows.
 - Do not use Bootstrap or Tabler classes.
