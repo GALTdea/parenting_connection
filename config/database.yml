@@ -10,35 +10,35 @@ default: &default
 development:
   primary:
     <<: *default
-    database: <%= ENV.fetch("POSTGRES_DB", "my_rails_starter_development") %>
+    database: <%= ENV.fetch("POSTGRES_DB", "parenting_connection_development") %>
   cache:
     <<: *default
-    database: <%= ENV.fetch("POSTGRES_CACHE_DB", "my_rails_starter_development_cache") %>
+    database: <%= ENV.fetch("POSTGRES_CACHE_DB", "parenting_connection_development_cache") %>
     migrations_paths: db/cache_migrate
   queue:
     <<: *default
-    database: <%= ENV.fetch("POSTGRES_QUEUE_DB", "my_rails_starter_development_queue") %>
+    database: <%= ENV.fetch("POSTGRES_QUEUE_DB", "parenting_connection_development_queue") %>
     migrations_paths: db/queue_migrate
   cable:
     <<: *default
-    database: <%= ENV.fetch("POSTGRES_CABLE_DB", "my_rails_starter_development_cable") %>
+    database: <%= ENV.fetch("POSTGRES_CABLE_DB", "parenting_connection_development_cable") %>
     migrations_paths: db/cable_migrate
 
 test:
   primary:
     <<: *default
-    database: <%= ENV.fetch("POSTGRES_TEST_DB", "my_rails_starter_test") %>
+    database: <%= ENV.fetch("POSTGRES_TEST_DB", "parenting_connection_test") %>
   cache:
     <<: *default
-    database: <%= ENV.fetch("POSTGRES_TEST_CACHE_DB", "my_rails_starter_test_cache") %>
+    database: <%= ENV.fetch("POSTGRES_TEST_CACHE_DB", "parenting_connection_test_cache") %>
     migrations_paths: db/cache_migrate
   queue:
     <<: *default
-    database: <%= ENV.fetch("POSTGRES_TEST_QUEUE_DB", "my_rails_starter_test_queue") %>
+    database: <%= ENV.fetch("POSTGRES_TEST_QUEUE_DB", "parenting_connection_test_queue") %>
     migrations_paths: db/queue_migrate
   cable:
     <<: *default
-    database: <%= ENV.fetch("POSTGRES_TEST_CABLE_DB", "my_rails_starter_test_cable") %>
+    database: <%= ENV.fetch("POSTGRES_TEST_CABLE_DB", "parenting_connection_test_cable") %>
     migrations_paths: db/cable_migrate
 
 production:
