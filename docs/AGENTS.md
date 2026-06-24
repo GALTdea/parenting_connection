@@ -1,88 +1,136 @@
-# AGENTS.md — AI Agent Entry Point
+# AGENTS.md - AI Agent Entry Point
 
-Read this file first. It tells you everything you need
-to work effectively on this Rails application.
+Read this file first in every AI-assisted development session.
+
+This repository is the durable memory for the Parent-Child Connection App. AI chats are ephemeral. Decisions, feature intent, verification expectations, and product constraints belong in `docs/` so future humans and agents can continue the work without guessing.
+
+## Product North Star
+
+Does this help parents connect with their children, understand who they are becoming, or preserve meaningful memories?
+
+If a proposed change does not clearly support that north star, pause and update the relevant product or feature documentation before implementing it.
+
+## Development Posture
+
+- Rails-first. Prefer conventional Rails models, controllers, views, jobs, policies, and service objects before introducing new layers.
+- Hotwire-compatible UI. Build server-rendered Rails views that work well with Turbo and Stimulus.
+- Mobile-aware from the beginning. The web app should be ready for an eventual Hotwire Native iOS/Android wrapper.
+- Artifact-driven AI development. Meaningful changes require durable artifacts: feature briefs, architecture notes, verification notes, and decision records.
+- Parent-reviewed AI. AI output may support reflection, summarization, and memory retrieval, but parents remain in control of what is saved, shown, shared, or sent.
+- Gentle, non-clinical, non-diagnostic language. The app may help parents notice patterns and preserve memories; it must not diagnose children, score parenting, or make medical/psychological claims.
+- Privacy and child data protection are core constraints, not later hardening work.
+
+## Required Workflow
+
+Before making a meaningful product or architecture change:
+
+1. Read this file.
+2. Read `docs/process/ai-dev-flow.md`.
+3. Read `docs/process/verification.md`.
+4. Read `docs/product/product-principles.md`.
+5. Read the active feature brief in `docs/features/active/`.
+6. If no feature brief exists for the requested work, create or update one before coding.
+
+Do not implement a meaningful feature from chat context alone.
+
+## Current MVP Focus
+
+The MVP is centered on:
+
+- Parent accounts
+- Child profiles
+- Daily questions
+- Text responses
+- Voice recordings
+- Timeline
+- Memory archive
+- Basic AI summaries
+- Monthly reflection letter
+
+The first active implementation brief is:
+
+- `docs/features/active/parent-accounts-and-child-profiles-stage-1.md`
 
 ## Stack
+
 - Ruby 4.0.5
 - Rails 8.1.3
 - Node.js 24.18.0 LTS + npm
-- PostgreSQL (default; dedicated starter)
-- Hotwire (Turbo + Stimulus), importmap, propshaft 1.3.x
+- PostgreSQL
+- Hotwire: Turbo + Stimulus
+- importmap
+- propshaft 1.3.x
 - Puma 8.x
-- Tailwind CSS 4.3.x + daisyUI 5.5.23 (tailwindcss-rails 4.6.x)
-  (config: app/assets/tailwind/application.css)
-  (daisyUI loaded via npm as @plugin)
+- Tailwind CSS 4.3.x + daisyUI 5.5.23
 - Devise 5.0.4 + devise_invitable 2.0.12
-- Pundit (authorization)
-- Solid Queue 1.4.x + Solid Cable 4.x (background jobs / Action Cable, no Redis)
-- Pagy 9.x (pagination; Pagy 43 deferred — see Gemfile)
-- friendly_id 5.7.x (slug-based URLs)
-- meta-tags 2.23.x (SEO)
-- RSpec + FactoryBot (testing)
-- Kamal 2.12.x (deployment)
-- Brakeman 8.x, RuboCop 1.88.x (via rubocop-rails-omakase)
+- Pundit
+- Solid Queue 1.4.x + Solid Cable 4.x
+- Pagy 9.x
+- friendly_id 5.7.x
+- meta-tags 2.23.x
+- RSpec + FactoryBot
+- Kamal 2.12.x
+- Brakeman 8.x
+- RuboCop 1.88.x via rubocop-rails-omakase
 
-Exact patch versions: Gemfile.lock
+Exact patch versions are in `Gemfile.lock`.
 
-## How to run
+## How to Run
 
-  bin/dev                          # start development server
-  npm install                      # install daisyUI dependency
-  bundle exec rspec                # run test suite
-  bundle exec rubocop              # lint
-  bin/rails tailwindcss:build      # rebuild CSS
-  bin/rails db:prepare             # create + migrate postgres databases
+```sh
+bin/dev
+npm install
+bundle exec rspec
+bundle exec rubocop
+bin/rails tailwindcss:build
+bin/rails db:prepare
+```
 
-## Key files
+## Key Existing App Files
 
 | File | Purpose |
-|------|---------|
-| app/controllers/application_controller.rb | Pundit, Pagy::Backend, layout routing |
-| app/helpers/application_helper.rb | Pagy::Frontend |
-| app/helpers/settings_helper.rb | multi_tenant_mode?, show_landing_page? |
-| app/views/layouts/ | application, dashboard, devise layouts |
-| app/views/shared/ | flash, user_menu, page_header, pagination partials |
-| app/assets/tailwind/application.css | Tailwind 4 + daisyUI config |
-| config/initializers/pagy.rb | pagination config |
-| config/initializers/friendly_id.rb | slug config |
-| config/initializers/meta_tags.rb | SEO config |
-| docs/ARCHITECTURE.md | domain model, layout system |
-| docs/CONVENTIONS.md | coding conventions, UI patterns |
+| --- | --- |
+| `app/controllers/application_controller.rb` | Pundit, Pagy::Backend, layout routing |
+| `app/helpers/application_helper.rb` | Pagy::Frontend |
+| `app/helpers/settings_helper.rb` | App settings helpers |
+| `app/views/layouts/` | Application, dashboard, and Devise layouts |
+| `app/views/shared/` | Shared UI partials |
+| `app/assets/tailwind/application.css` | Tailwind 4 + daisyUI config |
+| `config/initializers/pagy.rb` | Pagination config |
+| `config/initializers/friendly_id.rb` | Slug config |
+| `config/initializers/meta_tags.rb` | SEO config |
 
-## Layout system
-Three layouts, selected automatically by
-ApplicationController#determine_layout:
-- layouts/application — public/marketing pages
-- layouts/dashboard — authenticated pages
-- layouts/devise — auth pages (login, register, etc.)
+## Durable Documentation Map
 
-## What NOT to do
-- Do not use Bootstrap or Tabler classes anywhere
-- Do not add kaminari — pagy is already configured
-- Do not use form-control, label-text (daisyUI 4 classes)
-  See docs/CONVENTIONS.md for daisyUI 5 migration reference
-- Do not use rails_admin — not installed
-- Do not install Redis — Solid Queue handles background jobs
-- Do not write raw SQL — use ActiveRecord
-- Do not put business logic in controllers — use models
+| File | Purpose |
+| --- | --- |
+| `docs/process/ai-dev-flow.md` | How AI-assisted work moves from prompt to durable artifact to implementation |
+| `docs/process/verification.md` | Verification expectations by type of change |
+| `docs/product/strategy-2026.md` | Product strategy, audience, bets, and non-goals |
+| `docs/product/mvp-product-goal.md` | MVP scope and success definition |
+| `docs/product/product-principles.md` | Product voice, safety, privacy, and AI behavior principles |
+| `docs/features/_constraints.md` | Global constraints for every feature brief |
+| `docs/features/active/` | Current implementation briefs |
+| `docs/features/completed/` | Completed briefs after implementation and verification |
+| `docs/features/parked/` | Deferred briefs and ideas |
+| `docs/architecture/data-model.md` | Durable data model direction |
+| `docs/architecture/ai-architecture.md` | AI responsibilities, boundaries, and review model |
+| `docs/architecture/mobile-strategy.md` | Hotwire Native direction and mobile constraints |
+| `docs/decisions/` | Decision records for choices that should survive chat history |
 
-## Deferred views (still Bootstrap — rebuild when needed)
-- app/views/spaces/ — 11 files
-- app/views/users/ — 3 files
-When rebuilding these, follow docs/CONVENTIONS.md
-UI patterns and daisyUI 5 class reference.
+## What Not To Do
 
-## Further reading
-- docs/ARCHITECTURE.md — domain model, request lifecycle
-- docs/CONVENTIONS.md — conventions + daisyUI 5 cheatsheet
-- docs/SETUP.md — first-time setup instructions
-- docs/template/ — template build history (ignore for app dev)
+- Do not implement application features without a relevant feature brief.
+- Do not create models, controllers, migrations, or jobs as placeholders.
+- Do not use AI output as a clinical, diagnostic, or parenting-score authority.
+- Do not expose child data to third-party services without an explicit architecture note and privacy review.
+- Do not build UI that depends on hover-only interactions or desktop-only workflows.
+- Do not use Bootstrap or Tabler classes.
+- Do not add Kaminari; Pagy is already configured.
+- Do not install Redis; Solid Queue handles background jobs.
+- Do not write raw SQL when ActiveRecord is appropriate.
+- Do not put business logic in controllers.
 
-## Current status
-- RSpec: 102 examples, 0 failures
-- RuboCop: 108 files, 0 offenses
-- All layouts rebuilt in Tailwind + daisyUI 5
-- Turbo Drive enabled
-- Devise request specs complete
-- All models annotated (annotaterb)
+## Current Status
+
+This app is still in documentation and foundation setup for the Parent-Child Connection product. The starter Rails app exists, but product features should not be implemented until the corresponding feature brief has been created or updated.
