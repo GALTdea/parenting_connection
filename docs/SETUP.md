@@ -3,7 +3,7 @@
 ## First-time setup
 
 ### Prerequisites
-- Ruby 4.0.1 (rbenv or asdf recommended)
+- Ruby 4.0.5 (rbenv or asdf recommended)
 - Bundler 4.x
 - Node.js 24.18.0 LTS + npm (for daisyUI)
 - PostgreSQL 14+ (or equivalent recent version)

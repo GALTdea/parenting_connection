@@ -4,7 +4,7 @@ Read this file first. It tells you everything you need
 to work effectively on this Rails application.
 
 ## Stack
-- Ruby 4.0.1
+- Ruby 4.0.5
 - Rails 8.1.3
 - Node.js 24.18.0 LTS + npm
 - PostgreSQL (default; dedicated starter)

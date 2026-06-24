@@ -1,7 +1,7 @@
 # Parenting Connection
 
 An application built from a personal Rails 8 starter template.
-Built on Ruby 4.0.1, Rails 8.1.3, Puma 8, Tailwind CSS 4.3, daisyUI 5.5.23,
+Built on Ruby 4.0.5, Rails 8.1.3, Puma 8, Tailwind CSS 4.3, daisyUI 5.5.23,
 Devise, Pundit, Hotwire, Solid Queue, and Solid Cable.
 This app is PostgreSQL-first.
 
@@ -34,7 +34,7 @@ Default login: `admin@example.com` / `password123`
 
 | Layer | Technology |
 |-------|-----------|
-| Language | Ruby 4.0.1 |
+| Language | Ruby 4.0.5 |
 | Runtime | Node.js 24.18.0 LTS + npm |
 | Framework | Rails 8.1.3 |
 | App server | Puma 8.x |
