@@ -1,28 +1,25 @@
-# My Rails Starter
+# Parenting Connection
 
-A personal Rails 8 starter template.
-Built on Ruby 4.0.1, Tailwind CSS 4, daisyUI 5,
+An application built from a personal Rails 8 starter template.
+Built on Ruby 4.0.1, Rails 8.1.3, Tailwind CSS 4, daisyUI 5.5.23,
 Devise, Pundit, Hotwire, and Solid Queue.
-This template is PostgreSQL-first.
+This app is PostgreSQL-first.
 
-## Quick start (new app from template)
+## Quick Start
 
-### 1. Create a new repo from this template
-On GitHub, click **"Use this template"** →
-**"Create a new repository"**.
-Clone your new repo locally.
+### 1. Clone the repo
 
-### 2. Rename the app
 ```bash
-bin/rename MyNewAppName
+git clone <your-repo-url>
+cd parenting_connection
 ```
 
-### 3. Set up
+### 2. Set up
 ```bash
 bin/setup
 ```
 
-### 4. Start
+### 3. Start
 ```bash
 bin/dev
 ```
@@ -38,10 +35,11 @@ Default login: `admin@example.com` / `password123`
 | Layer | Technology |
 |-------|-----------|
 | Language | Ruby 4.0.1 |
-| Framework | Rails 8.1.2 |
+| Runtime | Node.js 24.18.0 LTS + npm |
+| Framework | Rails 8.1.3 |
 | Database | PostgreSQL |
 | Frontend | Hotwire (Turbo + Stimulus) |
-| CSS | Tailwind CSS 4 + daisyUI 5 |
+| CSS | Tailwind CSS 4 + daisyUI 5.5.23 |
 | Auth | Devise + devise_invitable |
 | Authorization | Pundit |
 | Background jobs | Solid Queue |
@@ -74,17 +72,13 @@ bin/rails db:seed            # reload seed data
 
 ---
 
-## Creating a new app from this template
+## Template Origin
 
-1. Click **"Use this template"** on GitHub
-2. Clone your new repo
-3. Run `bin/rename YourAppName`
-4. Run `bin/setup`
-5. Run `bin/dev`
-6. Commit: `git commit -m "Initialize from parenting-connection-app"`
+This repository was initialized from `my-rails-starter` and renamed for
+Parenting Connection. Template-maintenance notes live in `docs/template/`.
 
 ---
 
-## Template versions
+## Template Versions
 
 See [releases](../../releases) for changelog.

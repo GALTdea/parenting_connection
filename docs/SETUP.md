@@ -4,8 +4,8 @@
 
 ### Prerequisites
 - Ruby 4.0.1 (rbenv or asdf recommended)
-- Bundler 2.x
-- Node.js + npm (for daisyUI)
+- Bundler 4.x
+- Node.js 24.18.0 LTS + npm (for daisyUI)
 - PostgreSQL 14+ (or equivalent recent version)
 
 Make sure PostgreSQL is running locally and your user can create databases.
@@ -14,21 +14,32 @@ Defaults in `config/database.yml` use:
 - port: `5432`
 - user: your current shell user (`$USER`) unless `POSTGRES_USER` is set
 - password: `POSTGRES_PASSWORD` env var (optional, but usually needed)
+- development databases:
+  `parenting_connection_development`,
+  `parenting_connection_development_cache`,
+  `parenting_connection_development_queue`,
+  `parenting_connection_development_cable`
 
 ### Setup
 
   git clone <your-repo-url>
   cd <app-name>
+  bin/setup
+  bin/dev
+
+Manual equivalent:
+
   bundle install
   npm install
-  cp .env.sample .env
   bin/rails db:prepare
-  bin/dev
+  bin/rails db:seed
 
 Visit http://localhost:3000
 
 ### Verify
 
+  bin/rails about        # confirm Rails boots
+  node -v                # should match .node-version
   bundle exec rspec        # target: 0 failures
   bundle exec rubocop      # 0 offenses
 

@@ -5,10 +5,11 @@ to work effectively on this Rails application.
 
 ## Stack
 - Ruby 4.0.1
-- Rails 8.1.2
+- Rails 8.1.3
+- Node.js 24.18.0 LTS + npm
 - PostgreSQL (default; dedicated starter)
 - Hotwire (Turbo + Stimulus), importmap, propshaft
-- Tailwind CSS 4.2.0 + daisyUI 5.5.19
+- Tailwind CSS 4.2.1 + daisyUI 5.5.23
   (config: app/assets/tailwind/application.css)
   (daisyUI loaded via npm as @plugin)
 - Devise 5.0.2 + devise_invitable
@@ -23,6 +24,7 @@ to work effectively on this Rails application.
 ## How to run
 
   bin/dev                          # start development server
+  npm install                      # install daisyUI dependency
   bundle exec rspec                # run test suite
   bundle exec rubocop              # lint
   bin/rails tailwindcss:build      # rebuild CSS
