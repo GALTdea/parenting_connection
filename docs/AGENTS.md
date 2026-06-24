@@ -8,18 +8,22 @@ to work effectively on this Rails application.
 - Rails 8.1.3
 - Node.js 24.18.0 LTS + npm
 - PostgreSQL (default; dedicated starter)
-- Hotwire (Turbo + Stimulus), importmap, propshaft
-- Tailwind CSS 4.2.1 + daisyUI 5.5.23
+- Hotwire (Turbo + Stimulus), importmap, propshaft 1.3.x
+- Puma 8.x
+- Tailwind CSS 4.3.x + daisyUI 5.5.23 (tailwindcss-rails 4.6.x)
   (config: app/assets/tailwind/application.css)
   (daisyUI loaded via npm as @plugin)
-- Devise 5.0.2 + devise_invitable
+- Devise 5.0.4 + devise_invitable 2.0.12
 - Pundit (authorization)
-- Solid Queue (background jobs, no Redis)
-- Pagy 9.x (pagination)
-- friendly_id 5.x (slug-based URLs)
-- meta-tags 2.x (SEO)
+- Solid Queue 1.4.x + Solid Cable 4.x (background jobs / Action Cable, no Redis)
+- Pagy 9.x (pagination; Pagy 43 deferred — see Gemfile)
+- friendly_id 5.7.x (slug-based URLs)
+- meta-tags 2.23.x (SEO)
 - RSpec + FactoryBot (testing)
-- Kamal (deployment)
+- Kamal 2.12.x (deployment)
+- Brakeman 8.x, RuboCop 1.88.x (via rubocop-rails-omakase)
+
+Exact patch versions: Gemfile.lock
 
 ## How to run
 

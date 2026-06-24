@@ -1,8 +1,8 @@
 # Parenting Connection
 
 An application built from a personal Rails 8 starter template.
-Built on Ruby 4.0.1, Rails 8.1.3, Tailwind CSS 4, daisyUI 5.5.23,
-Devise, Pundit, Hotwire, and Solid Queue.
+Built on Ruby 4.0.1, Rails 8.1.3, Puma 8, Tailwind CSS 4.3, daisyUI 5.5.23,
+Devise, Pundit, Hotwire, Solid Queue, and Solid Cable.
 This app is PostgreSQL-first.
 
 ## Quick Start
@@ -37,14 +37,18 @@ Default login: `admin@example.com` / `password123`
 | Language | Ruby 4.0.1 |
 | Runtime | Node.js 24.18.0 LTS + npm |
 | Framework | Rails 8.1.3 |
+| App server | Puma 8.x |
 | Database | PostgreSQL |
 | Frontend | Hotwire (Turbo + Stimulus) |
-| CSS | Tailwind CSS 4 + daisyUI 5.5.23 |
-| Auth | Devise + devise_invitable |
+| CSS | Tailwind CSS 4.3 + daisyUI 5.5.23 |
+| Auth | Devise 5.0 + devise_invitable |
 | Authorization | Pundit |
-| Background jobs | Solid Queue |
-| Pagination | Pagy |
-| Deployment | Kamal |
+| Background jobs | Solid Queue 1.4 |
+| Action Cable | Solid Cable 4 |
+| Pagination | Pagy 9.x |
+| Deployment | Kamal 2.12 |
+
+Patch-level versions live in `Gemfile.lock`.
 
 ---
 
