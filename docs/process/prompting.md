@@ -23,7 +23,9 @@ Instead, prompt AI to:
 ```text
 Read docs/AGENTS.md and follow its required reading order for the selected risk tier and change.
 
-Implement only the next slice described in the feature brief.
+If this starts a new stage or new feature brief, draft or update the brief first, summarize it, and stop for my review before implementation.
+
+After I approve the brief, implement only the next slice described in it.
 
 Before coding, challenge the scope: can this be smaller, simpler, postponed, or removed?
 

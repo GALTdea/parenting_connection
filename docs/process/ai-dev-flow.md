@@ -62,6 +62,7 @@ Standard path expectations:
 - Apply the Standard Path checklist in `docs/features/_constraints.md`.
 - Follow the Standard Flow below.
 - Create or update the relevant feature brief before coding.
+- Stop for human review after drafting a new feature brief or new stage brief, unless the user explicitly asks to continue end-to-end.
 - Use the required reading order in `docs/AGENTS.md` to identify the product, feature, architecture, and verification docs that apply to the change.
 - Challenge scope before implementation.
 - Run verification appropriate to the behavior changed.
@@ -111,6 +112,8 @@ Use the required reading order in `docs/AGENTS.md` as the authoritative source f
 ## 2. Define
 
 If no feature brief exists, create one under `docs/features/active/`.
+
+For a new stage or new feature brief, stop after drafting or updating the brief. Summarize the proposed scope, out-of-scope items, acceptance criteria, and verification plan, then wait for human approval before implementation unless the user explicitly requested an end-to-end run.
 
 Before coding, define:
 

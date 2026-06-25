@@ -53,6 +53,8 @@ Before making a meaningful product or architecture change:
 
 If no feature brief exists for a meaningful change, create or update one before coding.
 
+For a new stage or new feature brief, stop after drafting or updating the brief and wait for human approval before implementation unless the user explicitly requests an end-to-end run.
+
 Do not implement a meaningful feature from chat context alone.
 
 ## Current MVP Focus
