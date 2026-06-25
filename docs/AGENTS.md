@@ -129,7 +129,7 @@ bin/rails db:prepare
 | --- | --- |
 | `docs/process/ai-dev-flow.md` | How AI-assisted work moves from prompt to durable artifact to implementation |
 | `docs/process/prompting.md` | How to prompt AI tools for this repo without overbuilding |
-| `docs/process/handoff.md` | Required trail after AI-assisted work |
+| `docs/process/handoff.md` | Proportional handoff trail after AI-assisted work |
 | `docs/process/verification.md` | Verification expectations by type of change |
 | `docs/product/strategy-2026.md` | Product strategy, audience, bets, and non-goals |
 | `docs/product/mvp-product-goal.md` | MVP scope and success definition |

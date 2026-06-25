@@ -1,8 +1,21 @@
 # Handoff Checklist
 
-Every AI-assisted task should leave a clear trail. Use this checklist in final summaries, pull request notes, or feature brief updates.
+Every AI-assisted task should leave a clear trail, but the trail should match the risk tier. Use this guidance in final summaries, pull request notes, or feature brief updates.
 
-## Required Summary
+## Fast Path Handoff
+
+For low-risk fast-path work, keep the handoff concise:
+
+- What changed
+- Files changed
+- Checks run
+- Known risks or follow-ups, if any
+
+If the task did not change product behavior, child data, AI behavior, privacy expectations, authorization, or navigation, do not force the full product and privacy checklist.
+
+## Standard And High-Risk Handoff
+
+For standard-path and high-risk-path work, include the full trail:
 
 - What changed
 - Why it changed
@@ -14,7 +27,7 @@ Every AI-assisted task should leave a clear trail. Use this checklist in final s
 
 ## Product Promise
 
-Name how the change supports at least one part of the product formula:
+For standard-path and high-risk-path product work, name how the change supports at least one part of the product formula:
 
 - Conversation
 - Connection
@@ -22,7 +35,7 @@ Name how the change supports at least one part of the product formula:
 - Memory
 - Legacy
 
-If a change does not support one of these, it probably needs more product definition before implementation.
+If a meaningful product change does not support one of these, it probably needs more product definition before implementation.
 
 ## Verification Notes
 

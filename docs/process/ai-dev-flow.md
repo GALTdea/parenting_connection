@@ -165,7 +165,7 @@ Leave a clear trail:
 - Docs updated or not updated
 - Known risks and follow-ups
 
-Use `docs/process/handoff.md` as the handoff checklist.
+Use `docs/process/handoff.md` for the handoff expected by the selected risk tier.
 
 Move completed feature briefs to `docs/features/completed/` only after implementation and verification.
 
