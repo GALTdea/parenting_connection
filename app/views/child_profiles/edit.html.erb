@@ -1,0 +1,16 @@
+<% content_for :breadcrumb do %>
+  <%= link_to "Children", child_profiles_path, class: "link link-hover" %>
+  <span class="mx-2">/</span>
+  Edit <%= @child_profile.name %>
+<% end %>
+
+<div class="mx-auto w-full max-w-2xl">
+  <div class="mb-6">
+    <p class="text-sm font-medium text-primary">Child profile</p>
+    <h1 class="text-3xl font-bold tracking-normal text-base-content">Edit <%= @child_profile.name %></h1>
+  </div>
+
+  <section class="rounded-lg bg-base-100 p-6 shadow-sm">
+    <%= render "form", child_profile: @child_profile %>
+  </section>
+</div>

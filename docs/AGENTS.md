@@ -70,9 +70,9 @@ The MVP is centered on:
 - Basic AI summaries
 - Monthly reflection letter
 
-The first active implementation brief is:
+The first completed implementation brief is:
 
-- `docs/features/active/parent-accounts-and-child-profiles-stage-1.md`
+- `docs/features/completed/parent-accounts-and-child-profiles-stage-1.md`
 
 ## Stack
 

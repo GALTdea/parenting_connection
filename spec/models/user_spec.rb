@@ -43,6 +43,10 @@ RSpec.describe User, type: :model do
     it 'has many spaces through user_roles' do
       expect(User.reflect_on_association(:spaces).macro).to eq(:has_many)
     end
+
+    it 'has many child_profiles' do
+      expect(User.reflect_on_association(:child_profiles).macro).to eq(:has_many)
+    end
   end
 
   describe 'devise modules' do

@@ -2,7 +2,7 @@
 <html lang="en" data-theme="starter_light">
   <head>
     <%= display_meta_tags(
-  site: "My Rails Starter",
+  site: "Parenting Connection",
   title: "Dashboard",
   separator: "·"
 ) %>
@@ -61,13 +61,26 @@
           <!-- Logo -->
           <div class="px-6 py-4 border-b border-base-300">
             <%= link_to root_path, class: "text-xl font-bold text-primary" do %>
-              My Rails Starter
+              Parenting Connection
             <% end %>
           </div>
 
           <!-- Navigation -->
           <nav class="flex-1 px-3 py-4">
             <ul class="menu menu-sm w-full gap-1">
+              <li>
+                <%= link_to child_profiles_path,
+                  class: "flex items-center gap-3 #{current_page?(child_profiles_path) ? 'active' : ''}" do %>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
+                       viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M12 21s-6-4.35-6-10a6 6 0 1112 0c0 5.65-6 10-6 10z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M12 11h.01" />
+                  </svg>
+                  Children
+                <% end %>
+              </li>
               <li>
                 <%= link_to spaces_path,
                   class: "flex items-center gap-3 #{current_page?(spaces_path) ? 'active' : ''}" do %>
@@ -110,4 +123,3 @@
     </div>
   </body>
 </html>
-

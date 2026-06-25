@@ -1,0 +1,49 @@
+<% content_for :breadcrumb do %>
+  Children
+<% end %>
+
+<div class="mx-auto flex w-full max-w-5xl flex-col gap-6">
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div>
+      <p class="text-sm font-medium text-primary">Parenting Connection</p>
+      <h1 class="text-3xl font-bold tracking-normal text-base-content">Your children</h1>
+    </div>
+
+    <%= link_to new_child_profile_path, class: "btn btn-primary w-full sm:w-auto" do %>
+      <span aria-hidden="true">+</span>
+      Add child
+    <% end %>
+  </div>
+
+  <% if @child_profiles.any? %>
+    <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      <% @child_profiles.each do |child_profile| %>
+        <article id="<%= dom_id(child_profile) %>" class="card bg-base-100 shadow-sm">
+          <div class="card-body gap-4">
+            <div>
+              <h2 class="card-title text-xl"><%= child_profile.name %></h2>
+              <p class="text-sm text-base-content/70">
+                Birthday: <%= child_profile.birthday.to_fs(:long) %>
+              </p>
+            </div>
+
+            <div class="card-actions justify-end">
+              <%= link_to "View", child_profile_path(child_profile), class: "btn btn-primary btn-sm" %>
+              <%= link_to "Edit", edit_child_profile_path(child_profile), class: "btn btn-ghost btn-sm" %>
+            </div>
+          </div>
+        </article>
+      <% end %>
+    </div>
+  <% else %>
+    <section class="rounded-lg border border-dashed border-base-300 bg-base-100 p-6 sm:p-8">
+      <div class="max-w-xl space-y-4">
+        <h2 class="text-2xl font-semibold text-base-content">Add your first child profile</h2>
+        <p class="text-base-content/70">
+          Start with just a name or nickname and birthday.
+        </p>
+        <%= link_to "Add child", new_child_profile_path, class: "btn btn-primary w-full sm:w-auto" %>
+      </div>
+    </section>
+  <% end %>
+</div>

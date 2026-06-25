@@ -2,7 +2,7 @@ Parent Accounts & Child Profiles — Stage 1
 
 Status
 
-Active brief. Do not implement until this brief is intentionally selected for development.
+Completed.
 
 ⸻
 
@@ -210,18 +210,11 @@ Verify:
 
 Implementation Decisions
 
-Initially:
-
-None.
-
-As implementation progresses, record important architectural decisions here.
-
-Examples:
-
-* Why the existing User model was retained.
-* Whether the existing Space model remained unused.
-* Whether FriendlyId was adopted for child profiles.
-* Links to any related ADRs.
+* The existing User model was retained as the authenticated parent account.
+* ChildProfile belongs directly to User for Stage 1.
+* The existing Space model remains untouched and unused for child profiles.
+* Numeric child profile IDs are sufficient for this private authenticated resource; FriendlyId was not adopted.
+* No Household abstraction was introduced.
 
 ⸻
 

@@ -1,0 +1,32 @@
+<%= form_with(model: child_profile, class: "space-y-5") do |form| %>
+  <% if child_profile.errors.any? %>
+    <div class="alert alert-error">
+      <div>
+        <h2 class="font-semibold">Please check the profile details.</h2>
+        <ul class="mt-2 list-disc pl-5 text-sm">
+          <% child_profile.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="form-control w-full">
+    <%= form.label :name, "First name or nickname", class: "label font-medium" %>
+    <%= form.text_field :name,
+          autocomplete: "off",
+          class: "input input-bordered w-full",
+          autofocus: true %>
+  </div>
+
+  <div class="form-control w-full">
+    <%= form.label :birthday, class: "label font-medium" %>
+    <%= form.date_field :birthday, class: "input input-bordered w-full" %>
+  </div>
+
+  <div class="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-end">
+    <%= link_to "Cancel", child_profiles_path, class: "btn btn-ghost w-full sm:w-auto" %>
+    <%= form.submit "Save child profile", class: "btn btn-primary w-full sm:w-auto" %>
+  </div>
+<% end %>
