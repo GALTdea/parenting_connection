@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   resources :child_profiles do
-    resources :memory_responses, only: %i[new create]
+    resources :memory_responses, only: %i[index show new create]
   end
   resources :users, only: %i[edit update destroy]
 

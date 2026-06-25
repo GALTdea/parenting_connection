@@ -72,9 +72,11 @@ The MVP is centered on:
 - Basic AI summaries
 - Monthly reflection letter
 
-The first completed implementation brief is:
+Completed implementation briefs:
 
 - `docs/features/completed/parent-accounts-and-child-profiles-stage-1.md`
+- `docs/features/completed/daily-questions-and-text-responses-stage-2.md`
+- `docs/features/completed/memory-timeline-and-archive-stage-3.md`
 
 ## Stack
 
@@ -163,4 +165,4 @@ bin/rails db:prepare
 
 ## Current Status
 
-This app is still in documentation and foundation setup for the Parent-Child Connection product. The starter Rails app exists, but product features should not be implemented until the corresponding feature brief has been created or updated.
+This app is implementing the Parent-Child Connection MVP through artifact-driven stages. Product features should not be implemented until the corresponding feature brief has been created or updated.

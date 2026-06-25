@@ -38,12 +38,17 @@
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div>
         <p class="text-sm font-medium text-primary">Daily ritual</p>
-        <h2 class="text-2xl font-semibold text-base-content">Responses</h2>
+        <h2 class="text-2xl font-semibold text-base-content">Recent memories</h2>
       </div>
 
-      <%= link_to "Answer a question",
-            new_child_profile_memory_response_path(@child_profile),
-            class: "btn btn-primary w-full sm:w-auto" %>
+      <div class="flex flex-col gap-2 sm:flex-row">
+        <%= link_to "Memory archive",
+              child_profile_memory_responses_path(@child_profile),
+              class: "btn btn-outline w-full sm:w-auto" %>
+        <%= link_to "Answer a question",
+              new_child_profile_memory_response_path(@child_profile),
+              class: "btn btn-primary w-full sm:w-auto" %>
+      </div>
     </div>
 
     <% if @memory_responses.any? %>
@@ -55,7 +60,9 @@
                 <%= memory_response.answered_on.to_fs(:long) %>
               </p>
               <h3 class="text-lg font-semibold text-base-content">
-                <%= memory_response.daily_question.prompt %>
+                <%= link_to memory_response.daily_question.prompt,
+                      child_profile_memory_response_path(@child_profile, memory_response),
+                      class: "link-hover" %>
               </h3>
               <p class="whitespace-pre-line text-base-content/80"><%= memory_response.response_text %></p>
             </div>
@@ -64,9 +71,12 @@
       </div>
     <% else %>
       <div class="mt-5 rounded-lg border border-dashed border-base-300 p-5">
-        <p class="text-base-content/70">
-          No responses yet. Start with one question and save the words you want to remember.
-        </p>
+        <div class="max-w-xl space-y-3">
+          <h3 class="text-lg font-semibold text-base-content">This archive will grow one conversation at a time</h3>
+          <p class="text-base-content/70">
+            Start with one small moment. Choose a question and save the words you want to remember.
+          </p>
+        </div>
       </div>
     <% end %>
   </section>

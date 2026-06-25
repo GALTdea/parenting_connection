@@ -1,0 +1,34 @@
+<% content_for :breadcrumb do %>
+  <%= link_to "Children", child_profiles_path, class: "link link-hover" %>
+  <span class="mx-2">/</span>
+  <%= link_to @child_profile.name, child_profile_path(@child_profile), class: "link link-hover" %>
+  <span class="mx-2">/</span>
+  <%= link_to "Memory archive", child_profile_memory_responses_path(@child_profile), class: "link link-hover" %>
+  <span class="mx-2">/</span>
+  Memory
+<% end %>
+
+<div class="mx-auto flex w-full max-w-3xl flex-col gap-6">
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+    <div>
+      <p class="text-sm font-medium text-primary">Saved memory</p>
+      <h1 class="text-3xl font-bold tracking-normal text-base-content"><%= @memory_response.daily_question.prompt %></h1>
+      <p class="mt-2 text-base-content/60"><%= @memory_response.answered_on.to_fs(:long) %></p>
+    </div>
+
+    <%= link_to "Capture another",
+          new_child_profile_memory_response_path(@child_profile),
+          class: "btn btn-primary w-full sm:w-auto" %>
+  </div>
+
+  <article class="rounded-lg bg-base-100 p-6 shadow-sm">
+    <p class="whitespace-pre-line text-lg leading-8 text-base-content"><%= @memory_response.response_text %></p>
+  </article>
+
+  <div class="flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
+    <%= link_to "Back to profile", child_profile_path(@child_profile), class: "btn btn-ghost w-full sm:w-auto" %>
+    <%= link_to "Back to archive",
+          child_profile_memory_responses_path(@child_profile),
+          class: "btn btn-outline w-full sm:w-auto" %>
+  </div>
+</div>

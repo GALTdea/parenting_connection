@@ -1,0 +1,67 @@
+<% content_for :breadcrumb do %>
+  <%= link_to "Children", child_profiles_path, class: "link link-hover" %>
+  <span class="mx-2">/</span>
+  <%= link_to @child_profile.name, child_profile_path(@child_profile), class: "link link-hover" %>
+  <span class="mx-2">/</span>
+  Memory archive
+<% end %>
+
+<div class="mx-auto flex w-full max-w-3xl flex-col gap-6">
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+    <div>
+      <p class="text-sm font-medium text-primary">Memory archive</p>
+      <h1 class="text-3xl font-bold tracking-normal text-base-content"><%= @child_profile.name %>'s saved responses</h1>
+    </div>
+
+    <%= link_to "Capture a response",
+          new_child_profile_memory_response_path(@child_profile),
+          class: "btn btn-primary w-full sm:w-auto" %>
+  </div>
+
+  <% if @memory_responses.any? %>
+    <div class="space-y-8">
+      <% @memory_responses_by_month.each do |month, memory_responses| %>
+        <section class="space-y-4">
+          <h2 class="text-xl font-semibold text-base-content"><%= month.strftime("%B %Y") %></h2>
+
+          <div class="space-y-3">
+            <% memory_responses.each do |memory_response| %>
+              <article id="<%= dom_id(memory_response) %>" class="rounded-lg border border-base-300 bg-base-100 p-4 shadow-sm">
+                <div class="space-y-3">
+                  <p class="text-sm font-medium text-base-content/60">
+                    <%= memory_response.answered_on.to_fs(:long) %>
+                  </p>
+                  <div class="space-y-2">
+                    <h3 class="text-lg font-semibold text-base-content">
+                      <%= link_to memory_response.daily_question.prompt,
+                            child_profile_memory_response_path(@child_profile, memory_response),
+                            class: "link-hover" %>
+                    </h3>
+                    <p class="text-base-content/75">
+                      <%= truncate(memory_response.response_text, length: 180, separator: " ") %>
+                    </p>
+                  </div>
+                  <%= link_to "Read memory",
+                        child_profile_memory_response_path(@child_profile, memory_response),
+                        class: "btn btn-ghost btn-sm px-0 text-primary hover:bg-transparent" %>
+                </div>
+              </article>
+            <% end %>
+          </div>
+        </section>
+      <% end %>
+    </div>
+  <% else %>
+    <section class="rounded-lg border border-dashed border-base-300 bg-base-100 p-6 sm:p-8">
+      <div class="max-w-xl space-y-4">
+        <h2 class="text-2xl font-semibold text-base-content">This archive will grow one conversation at a time</h2>
+        <p class="text-base-content/70">
+          Capture a response today and it will appear here as part of <%= @child_profile.name %>'s memory record.
+        </p>
+        <%= link_to "Capture the first memory",
+              new_child_profile_memory_response_path(@child_profile),
+              class: "btn btn-primary w-full sm:w-auto" %>
+      </div>
+    </section>
+  <% end %>
+</div>
