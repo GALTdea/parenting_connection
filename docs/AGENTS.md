@@ -133,13 +133,13 @@ bin/rails db:prepare
 | `docs/process/verification.md` | Verification expectations by type of change |
 | `docs/product/strategy-2026.md` | Product strategy, audience, bets, and non-goals |
 | `docs/product/mvp-product-goal.md` | MVP scope and success definition |
-| `docs/product/product-principles.md` | Product voice, safety, privacy, and AI behavior principles |
+| `docs/product/product-principles.md` | Product voice, safety, privacy, and product boundaries |
 | `docs/features/_constraints.md` | Global constraints for every feature brief |
 | `docs/features/active/` | Current implementation briefs |
 | `docs/features/completed/` | Completed briefs after implementation and verification |
 | `docs/features/parked/` | Deferred briefs and ideas |
 | `docs/architecture/data-model.md` | Durable data model direction |
-| `docs/architecture/ai-architecture.md` | AI responsibilities, boundaries, and review model |
+| `docs/architecture/ai-architecture.md` | AI responsibilities, boundaries, review model, privacy, and failure behavior |
 | `docs/architecture/mobile-strategy.md` | Hotwire Native direction and mobile constraints |
 | `docs/decisions/adr-template.md` | Lightweight template for meaningful decision records |
 | `docs/decisions/` | Decision records for choices that should survive chat history |

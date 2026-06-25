@@ -1,180 +1,131 @@
-AI Architecture
+# Product Principles
 
-AI in this app should support reflection, memory preservation, and parent noticing. It should not become an authority over the child, the parent, or the relationship.
+This app should help parents build a quiet ritual of connection, preserve meaningful memories, and notice who their children are becoming over time.
 
-AI should feel like a quiet assistant helping parents revisit what they have already captured, not like a system evaluating the family.
+The product should feel private, gentle, and human. It should not feel like a dashboard, assessment tool, productivity system, or authority over the parent-child relationship.
 
-Core Principle
+## North Star
 
-Original memories are the source of truth.
+Every meaningful product change should support at least one part of the product formula:
 
-AI-generated content is always secondary, always reviewable, and never treated as objective fact.
+- Conversation
+- Connection
+- Understanding
+- Memory
+- Legacy
 
-The app should preserve what the parent captured before preserving what AI interpreted.
+If a feature does not clearly support one of these, it should be challenged, postponed, or removed.
 
-AI Responsibilities
+## Product Shape
 
-MVP AI may help with:
+Prefer features that make it easier for a parent to:
 
-* Basic summaries of saved memories
-* Gentle theme extraction across parent-authored entries
-* Monthly reflection letter drafts
-* Memory resurfacing prompts
-* Suggested titles or short descriptions for memories
-* Light organization of existing memories
+- Start a meaningful conversation
+- Capture a child response with low friction
+- Revisit memories in context
+- Notice gentle patterns over time
+- Preserve a private family archive
 
-AI should operate only inside specific product features. Do not add general-purpose AI chat, open-ended advice, or always-on AI behavior during MVP.
+Avoid features that push the product toward:
 
-AI Boundaries
+- Parenting scores
+- Child scores, labels, rankings, or profiles
+- Clinical, educational, or behavioral assessment
+- Productivity tracking
+- Social sharing
+- Generic AI chat
+- Administrative complexity that does not protect privacy, trust, or memory quality
 
-AI must not:
+## Product Voice
 
-* Diagnose children
-* Diagnose parents
-* Score parenting
-* Score child behavior
-* Rank, rate, or compare children
-* Predict developmental outcomes
-* Present clinical, medical, educational, or behavioral advice
-* Recommend interventions
-* Replace parent judgment
-* Publish, send, or share content without parent review
-* Create permanent claims about a child without parent approval
-* Present interpretations as certainty
+The voice should be warm, calm, and respectful. It should treat the parent as capable and the child as a whole person, not as a data source to optimize.
 
-Parent Review Model
+Use language that feels:
 
-AI-generated content should be treated as a draft until the parent reviews it.
+- Gentle
+- Clear
+- Specific
+- Non-clinical
+- Non-judgmental
+- Parent-centered
 
-The app should preserve:
+Avoid language that sounds:
 
-* Original parent text
-* Original voice recording, if stored
-* Transcript, if created
-* AI-generated draft
-* Parent-approved final text, if different
-* Review status
-* Prompt version used
-* Timestamp of generation
-* Timestamp of parent approval, edit, or discard
+- Diagnostic
+- Certain about a child's inner state
+- Comparative
+- Alarmist
+- Optimizing
+- Performative
 
-Recommended AI output statuses:
+## Privacy And Trust
 
-* draft
-* reviewed
-* approved
-* edited
-* discarded
-* failed
+Privacy is part of the product value, not a background implementation detail.
 
-AI should never overwrite original parent-authored memory content. If AI creates a summary, title, letter, or reflection, it should be stored separately from the original memory.
+Product work should:
 
-The exact data model should be decided in the relevant feature brief before implementation.
+- Collect the minimum useful child data
+- Keep child profiles and memories private by default
+- Preserve original parent-authored memories as the source of truth
+- Make parent review and control obvious before saving, sending, or sharing generated content
+- Avoid public sharing, public links, or multi-household access until explicitly designed
+- Treat voice recordings, transcripts, prompts, and generated summaries as sensitive child data
 
-Feature-Scoped AI
+## AI Product Boundary
 
-Each AI feature should define:
+AI may support reflection, memory preservation, and parent noticing. It must not become an authority over the child, the parent, or the relationship.
 
-* User-facing purpose
-* Input data required
-* Output generated
-* Storage behavior
-* Review flow
-* Failure behavior
-* Privacy notes
-* Prompt version
-* Tests or acceptance criteria
+At the product level:
 
-Do not implement AI calls until the relevant feature brief and privacy notes are written.
+- AI output is always secondary to original memories.
+- AI output should be framed as draft reflection, not fact.
+- Parents must review AI-assisted content before it is saved, sent, or shared.
+- AI should operate only inside specific product features.
+- The product should remain useful when AI is unavailable.
 
-Prompt And Output Style
+For AI implementation details, use `docs/architecture/ai-architecture.md`.
 
-Prompts should require:
+## MVP Bias
 
-* Warm, gentle language
-* Non-clinical framing
-* Uncertainty when interpreting patterns
-* Respect for family context
-* No diagnosis or labels
-* No claims beyond the supplied memories
-* No advice framed as instruction
-* No emotional certainty
-* No child personality labeling
+During the MVP, prefer the smallest product slice that proves the core ritual:
 
-Outputs should prefer:
+1. Parent signs in.
+2. Parent creates or selects a child profile.
+3. Parent captures a meaningful response.
+4. The response becomes part of a private timeline.
+5. Parent can revisit the archive.
+6. AI may later help draft gentle reflections for parent review.
 
-* “A theme you might notice…”
-* “This memory may be worth preserving because…”
-* “Across these entries, one gentle pattern is…”
-* “You may want to revisit…”
-* “This could be a meaningful moment because…”
+Build the non-AI version of a core feature before layering AI onto it.
 
-Outputs should avoid:
+## Design And Interaction
 
-* “Your child is…”
-* “This means…”
-* “This indicates…”
-* “You should…”
-* “Concern detected…”
-* “Your parenting style…”
-* “Your child’s personality is…”
-* “This behavior shows…”
-
-Privacy Requirements
-
-Before sending data to an AI provider, document:
-
-* Which data is sent
-* Why the feature needs it
-* Whether recordings are included
-* Whether transcripts are included
-* Whether child names are included
-* Whether generated output is stored
-* How parents can review, edit, or delete it
-* What failure behavior looks like
-* Whether the provider stores or trains on submitted data
-* Whether the feature can work with less data
-
-Prefer sending the minimum necessary data for the specific feature.
-
-Voice recordings should not be sent to an AI provider unless the feature explicitly requires transcription or voice processing and the parent has clearly initiated that action.
-
-Data Minimization
-
-AI requests should use the smallest useful context.
+Authenticated product surfaces should feel quiet, task-focused, and mobile-friendly.
 
 Prefer:
 
-* Selected memories over the entire archive
-* Transcripts over raw audio when possible
-* Parent-approved content over drafts
-* Recent relevant entries over all entries
-* Summaries over full raw history when appropriate
+- Short flows
+- Clear forms
+- Touch-friendly controls
+- Predictable navigation
+- Server-rendered Rails and Hotwire-compatible interactions
+- Interfaces that help parents capture and revisit memories quickly
 
-Avoid sending unnecessary child profile details.
+Avoid:
 
-Failure Behavior
+- Marketing-style layouts inside authenticated flows
+- Desktop-only interactions
+- Hover-required controls
+- Dense dashboards
+- Graphs, rankings, or visualizations that imply evaluation
 
-AI failures should be quiet and recoverable.
+## Decision Filter
 
-A parent should never lose access to original memories because summarization, transcription, theme extraction, or letter generation failed.
+Before shipping meaningful product work, ask:
 
-When AI fails:
-
-* Preserve the original memory
-* Show a simple non-alarming message
-* Allow retry when appropriate
-* Do not block the parent’s core capture flow
-* Log enough technical detail for debugging without exposing unnecessary child data
-
-MVP AI Implementation Rule
-
-For MVP, AI should be implemented only after the non-AI version of the core feature works.
-
-Example:
-
-* Save memory first.
-* Review timeline first.
-* Generate reflection draft second.
-
-The product should remain useful even if AI is temporarily unavailable.
+- Does this support conversation, connection, understanding, memory, or legacy?
+- Does this keep the parent in control?
+- Does this avoid scoring, diagnosing, labeling, or ranking?
+- Does this collect only the child data the feature truly needs?
+- Does this preserve the original memory?
+- Does this keep the MVP loop simpler rather than broader?
