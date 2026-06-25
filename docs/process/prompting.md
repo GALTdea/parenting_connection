@@ -21,9 +21,7 @@ Instead, prompt AI to:
 ## Good Prompt Shape
 
 ```text
-Read docs/AGENTS.md, docs/product/mvp-product-goal.md, docs/product/product-principles.md,
-docs/features/_constraints.md, docs/process/ai-dev-flow.md, docs/process/verification.md,
-and the relevant active feature brief.
+Read docs/AGENTS.md and follow its required reading order for the selected risk tier and change.
 
 Implement only the next slice described in the feature brief.
 

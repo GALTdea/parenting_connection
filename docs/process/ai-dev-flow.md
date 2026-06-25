@@ -60,7 +60,7 @@ Standard path expectations:
 
 - Follow the Standard Flow below.
 - Create or update the relevant feature brief before coding.
-- Read the product, feature, architecture, and verification docs that apply to the change.
+- Use the required reading order in `docs/AGENTS.md` to identify the product, feature, architecture, and verification docs that apply to the change.
 - Challenge scope before implementation.
 - Run verification appropriate to the behavior changed.
 - Leave the full handoff trail.
@@ -103,15 +103,7 @@ Use this flow for standard-path and high-risk-path work:
 
 Start from the product north star: does this help parents connect with their children, understand who they are becoming, or preserve meaningful memories?
 
-Read the relevant durable docs:
-
-- `docs/AGENTS.md`
-- `docs/product/mvp-product-goal.md`
-- `docs/product/product-principles.md`
-- `docs/features/_constraints.md`
-- Relevant feature brief
-- Relevant architecture docs
-- `docs/process/verification.md`
+Use the required reading order in `docs/AGENTS.md` as the authoritative source for durable context. Read the docs that apply to the selected risk tier and the specific change.
 
 ## 2. Define
 
