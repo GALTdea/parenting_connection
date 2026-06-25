@@ -5,6 +5,10 @@ RSpec.describe ChildProfile, type: :model do
     it 'belongs to a user' do
       expect(ChildProfile.reflect_on_association(:user).macro).to eq(:belongs_to)
     end
+
+    it 'has many memory responses' do
+      expect(ChildProfile.reflect_on_association(:memory_responses).macro).to eq(:has_many)
+    end
   end
 
   describe 'validations' do

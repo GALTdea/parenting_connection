@@ -2,6 +2,7 @@
 
 class ChildProfile < ApplicationRecord
   belongs_to :user
+  has_many :memory_responses, dependent: :destroy
 
   validates :name, presence: true
   validates :birthday, presence: true

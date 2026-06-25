@@ -1,0 +1,33 @@
+<% content_for :breadcrumb do %>
+  <%= link_to "Children", child_profiles_path, class: "link link-hover" %>
+  <span class="mx-2">/</span>
+  <%= link_to @child_profile.name, child_profile_path(@child_profile), class: "link link-hover" %>
+  <span class="mx-2">/</span>
+  New response
+<% end %>
+
+<div class="mx-auto flex w-full max-w-3xl flex-col gap-6">
+  <div>
+    <p class="text-sm font-medium text-primary">Daily question</p>
+    <h1 class="text-3xl font-bold tracking-normal text-base-content">Capture a response for <%= @child_profile.name %></h1>
+  </div>
+
+  <% if @daily_questions.any? %>
+    <section class="rounded-lg bg-base-100 p-6 shadow-sm">
+      <%= render "form",
+            child_profile: @child_profile,
+            memory_response: @memory_response,
+            daily_questions: @daily_questions %>
+    </section>
+  <% else %>
+    <section class="rounded-lg border border-dashed border-base-300 bg-base-100 p-6 sm:p-8">
+      <div class="max-w-xl space-y-4">
+        <h2 class="text-2xl font-semibold text-base-content">No questions are ready yet</h2>
+        <p class="text-base-content/70">
+          Add active daily questions before capturing responses.
+        </p>
+        <%= link_to "Back to profile", child_profile_path(@child_profile), class: "btn btn-primary w-full sm:w-auto" %>
+      </div>
+    </section>
+  <% end %>
+</div>

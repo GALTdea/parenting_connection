@@ -2,7 +2,9 @@ Rails.application.routes.draw do
   devise_for :users
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-  resources :child_profiles
+  resources :child_profiles do
+    resources :memory_responses, only: %i[new create]
+  end
   resources :users, only: %i[edit update destroy]
 
   resources :spaces do

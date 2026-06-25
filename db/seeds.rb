@@ -24,6 +24,23 @@ user = User.find_or_create_by!(email: "user@example.com") do |u|
 end
 puts "  regular user: #{user.email}"
 
+daily_questions = [
+  "What made you smile today?",
+  "What is something you wondered about today?",
+  "What would you like to remember about this week?",
+  "What was the best part of your day?",
+  "What is something kind someone did today?",
+  "If you could ask tomorrow one question, what would it be?"
+]
+
+daily_questions.each.with_index(1) do |prompt, position|
+  DailyQuestion.find_or_create_by!(prompt:) do |question|
+    question.position = position
+    question.active = true
+  end
+end
+puts "  daily questions: #{DailyQuestion.count}"
+
 # Default space for admin
 if Space.respond_to?(:find_or_create_by!)
   space = Space.find_or_create_by!(name: "Default Space") do |s|

@@ -59,11 +59,19 @@ RSpec.describe "/child_profiles", type: :request do
   describe "GET /child_profiles/:id" do
     it "renders a child profile owned by the signed-in user" do
       child_profile = create(:child_profile, user: user)
+      daily_question = create(:daily_question, prompt: "What made you smile today?")
+      create(:memory_response,
+        child_profile: child_profile,
+        daily_question: daily_question,
+        response_text: "We read the same book twice.")
 
       get child_profile_url(child_profile)
 
       expect(response).to be_successful
       expect(response.body).to include(child_profile.name)
+      expect(response.body).to include("Answer a question")
+      expect(response.body).to include("What made you smile today?")
+      expect(response.body).to include("We read the same book twice.")
     end
 
     it "does not render another user's child profile" do
@@ -132,6 +140,15 @@ RSpec.describe "/child_profiles", type: :request do
       end.to change(user.child_profiles, :count).by(-1)
 
       expect(response).to redirect_to(child_profiles_url)
+    end
+
+    it "removes the child profile's memory responses" do
+      child_profile = create(:child_profile, user: user)
+      create(:memory_response, child_profile: child_profile)
+
+      expect do
+        delete child_profile_url(child_profile)
+      end.to change(MemoryResponse, :count).by(-1)
     end
 
     it "does not remove another user's child profile" do

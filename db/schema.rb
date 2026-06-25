@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_24_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_25_000001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -31,6 +31,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_24_000000) do
     t.index ["user_id"], name: "index_child_profiles_on_user_id"
   end
 
+  create_table "daily_questions", force: :cascade do |t|
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.integer "position"
+    t.text "prompt", null: false
+    t.datetime "updated_at", null: false
+    t.index ["active", "position"], name: "index_daily_questions_on_active_and_position"
+    t.index ["prompt"], name: "index_daily_questions_on_prompt", unique: true
+  end
+
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.datetime "created_at"
     t.string "scope"
@@ -40,6 +50,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_24_000000) do
     t.index ["slug", "sluggable_type", "scope"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope", unique: true
     t.index ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type"
     t.index ["sluggable_type", "sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_type_and_sluggable_id"
+  end
+
+  create_table "memory_responses", force: :cascade do |t|
+    t.date "answered_on", null: false
+    t.bigint "child_profile_id", null: false
+    t.datetime "created_at", null: false
+    t.bigint "daily_question_id", null: false
+    t.text "response_text", null: false
+    t.datetime "updated_at", null: false
+    t.index ["child_profile_id", "answered_on"], name: "index_memory_responses_on_child_profile_id_and_answered_on"
+    t.index ["child_profile_id"], name: "index_memory_responses_on_child_profile_id"
+    t.index ["daily_question_id"], name: "index_memory_responses_on_daily_question_id"
   end
 
   create_table "plans", force: :cascade do |t|
@@ -119,5 +141,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_24_000000) do
   end
 
   add_foreign_key "child_profiles", "users"
+  add_foreign_key "memory_responses", "child_profiles"
+  add_foreign_key "memory_responses", "daily_questions"
   add_foreign_key "roles", "spaces"
 end

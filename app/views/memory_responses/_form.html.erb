@@ -1,0 +1,43 @@
+<%= form_with(model: [ child_profile, memory_response ], class: "space-y-5") do |form| %>
+  <% if memory_response.errors.any? %>
+    <div class="alert alert-error">
+      <div>
+        <h2 class="font-semibold">Please check the response.</h2>
+        <ul class="mt-2 list-disc pl-5 text-sm">
+          <% memory_response.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="form-control w-full">
+    <%= form.label :daily_question_id, "Question", class: "label font-medium" %>
+    <%= form.collection_select :daily_question_id,
+          daily_questions,
+          :id,
+          :prompt,
+          { prompt: "Choose a question" },
+          class: "select select-bordered w-full" %>
+  </div>
+
+  <div class="form-control w-full">
+    <%= form.label :response_text, "Response", class: "label font-medium" %>
+    <%= form.text_area :response_text,
+          rows: 8,
+          class: "textarea textarea-bordered min-h-40 w-full",
+          placeholder: "Write down what they said, in their words when you can.",
+          autofocus: true %>
+  </div>
+
+  <div class="form-control w-full">
+    <%= form.label :answered_on, "Date", class: "label font-medium" %>
+    <%= form.date_field :answered_on, class: "input input-bordered w-full" %>
+  </div>
+
+  <div class="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-end">
+    <%= link_to "Cancel", child_profile_path(child_profile), class: "btn btn-ghost w-full sm:w-auto" %>
+    <%= form.submit "Save response", class: "btn btn-primary w-full sm:w-auto" %>
+  </div>
+<% end %>
