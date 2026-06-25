@@ -134,7 +134,7 @@ bin/rails db:prepare
 | `docs/product/strategy-2026.md` | Product strategy, audience, bets, and non-goals |
 | `docs/product/mvp-product-goal.md` | MVP scope and success definition |
 | `docs/product/product-principles.md` | Product voice, safety, privacy, and product boundaries |
-| `docs/features/_constraints.md` | Global constraints for every feature brief |
+| `docs/features/_constraints.md` | Standing constraints checklist by risk tier |
 | `docs/features/active/` | Current implementation briefs |
 | `docs/features/completed/` | Completed briefs after implementation and verification |
 | `docs/features/parked/` | Deferred briefs and ideas |

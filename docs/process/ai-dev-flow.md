@@ -38,6 +38,7 @@ Examples:
 
 Fast path expectations:
 
+- Apply the Fast Path checklist in `docs/features/_constraints.md`.
 - Read only the relevant files and any immediately necessary docs.
 - Do not create a new feature brief.
 - Implement the narrow change.
@@ -58,6 +59,7 @@ Examples:
 
 Standard path expectations:
 
+- Apply the Standard Path checklist in `docs/features/_constraints.md`.
 - Follow the Standard Flow below.
 - Create or update the relevant feature brief before coding.
 - Use the required reading order in `docs/AGENTS.md` to identify the product, feature, architecture, and verification docs that apply to the change.
@@ -80,9 +82,10 @@ Examples:
 
 High-risk path expectations:
 
+- Apply the High-Risk checklist in `docs/features/_constraints.md`.
 - Follow the Standard Flow with extra scrutiny.
 - Read the relevant architecture docs and decision records before coding.
-- Document data minimization, parent review, failure behavior, and deletion/export implications where relevant.
+- Document the extra notes required by the High-Risk checklist and relevant architecture docs.
 - Create a decision record when choosing among durable alternatives.
 - Prefer smaller implementation slices and stronger verification.
 - Explicitly name unresolved risks in the handoff.
@@ -126,11 +129,7 @@ Challenge questions:
 
 - Can this be a smaller slice?
 - Can this wait until after the MVP loop works?
-- Does this support conversation, connection, understanding, memory, or legacy?
-- Does this risk becoming a tracker, dashboard, clinical tool, optimization product, or generic AI app?
-- Does it collect more child data than needed?
-- Does it preserve parent review and control?
-- Is Rails convention enough for this?
+- Does it satisfy the standing constraints for the selected risk tier?
 
 If the answer changes scope, update the feature brief before coding.
 
@@ -186,7 +185,7 @@ Every feature brief should include:
 - Verification plan
 - Open questions
 
-Use `docs/features/_constraints.md` as a standing checklist for every brief.
+Use the relevant risk-tier checklist in `docs/features/_constraints.md` for every brief.
 
 ## AI Session Hygiene
 
@@ -198,14 +197,7 @@ Use `docs/features/_constraints.md` as a standing checklist for every brief.
 
 ## Rails-First Implementation Bias
 
-- Use conventional Rails resources before inventing custom architecture.
-- Keep business rules in models, policies, jobs, or service objects rather than controllers.
-- Use Hotwire for interactive behavior unless a richer client-side tool is clearly justified.
-- Build server-rendered experiences that remain usable if JavaScript is limited.
-- Design views so they can later fit into a Hotwire Native wrapper.
-- Avoid premature abstractions.
-- Prefer small slices over broad rewrites.
-- Do not turn the app into a tracker, dashboard, clinical tool, optimization product, or generic AI app.
+Use the implementation shape in `docs/features/_constraints.md` as the standing Rails-first checklist. Prefer the smallest conventional Rails and Hotwire-compatible slice that satisfies the brief.
 
 ## When To Create A Decision Record
 

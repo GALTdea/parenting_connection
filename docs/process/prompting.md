@@ -9,7 +9,7 @@ Do not ask AI to build broad features from chat context alone.
 Instead, prompt AI to:
 
 - Read the required durable docs.
-- Use the product north star and MVP goal.
+- Use the selected risk tier and standing constraints.
 - Follow the relevant feature brief.
 - Challenge scope before implementation.
 - Implement only the next slice.
@@ -27,7 +27,7 @@ Implement only the next slice described in the feature brief.
 
 Before coding, challenge the scope: can this be smaller, simpler, postponed, or removed?
 
-Keep the implementation Rails-first and Hotwire-compatible.
+Apply the standing constraints in docs/features/_constraints.md.
 Do not introduce AI behavior unless the feature brief explicitly calls for it.
 Do not add unrelated models, controllers, migrations, jobs, or UI flows.
 

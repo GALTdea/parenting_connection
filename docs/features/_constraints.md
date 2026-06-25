@@ -1,48 +1,63 @@
-# Feature Constraints
+# Standing Constraints
 
-Apply these constraints to every feature brief and implementation.
+Use this checklist for feature briefs, implementation, verification, and handoff. Apply the lowest risk tier that honestly fits the change; when unsure, use the higher tier.
 
-## Product Fit
+## Fast Path Checklist
 
-- The feature must support the north star: help parents connect with their children, understand who they are becoming, or preserve meaningful memories.
-- The feature should serve the MVP loop unless explicitly marked post-MVP.
-- Avoid administrative complexity unless it protects privacy, trust, or memory quality.
+Use for low-risk work that does not change product behavior, data contracts, privacy expectations, AI behavior, authorization, navigation, or the product promise.
 
-## Rails And Hotwire
+- Confirm the change is local and behavior-preserving.
+- Avoid creating or updating a feature brief.
+- Run the narrowest useful check.
+- Leave a concise handoff with files changed and checks run.
 
-- Build Rails-first.
-- Use conventional routes, controllers, models, policies, jobs, and views.
-- Keep UI Hotwire-compatible.
-- Use Stimulus for modest interactivity.
-- Avoid SPA-only assumptions.
+## Standard Path Checklist
 
-## Mobile And Hotwire Native
+Use for meaningful product or architecture work with bounded risk.
 
-- Design touch-friendly flows.
-- Avoid hover-only controls.
-- Keep screens focused and navigation predictable.
-- Do not depend on browser APIs without noting native wrapper implications.
-- Treat voice recording as a sensitive mobile capability that needs explicit design and permission handling.
+Product fit:
 
-## AI Behavior
+- Supports conversation, connection, understanding, memory, or legacy.
+- Serves the MVP loop unless explicitly marked post-MVP.
+- Avoids administrative complexity unless it protects privacy, trust, or memory quality.
 
-- AI must be gentle, non-clinical, and non-diagnostic.
-- AI must not label, score, or diagnose children or parents.
-- AI-generated summaries and letters must be parent-reviewed.
-- AI failures must not block access to original memories.
-- Prompts and outputs that include child data require privacy review.
+Implementation shape:
 
-## Privacy And Child Data
+- Builds Rails-first with conventional routes, controllers, models, policies, jobs, and views.
+- Keeps UI Hotwire-compatible and avoids SPA-only assumptions.
+- Uses Stimulus only for modest interactivity.
+- Keeps user-facing flows touch-friendly and mobile-aware.
 
-- Collect the minimum useful data.
-- Scope child data to the authorized parent or household model.
-- Avoid logging sensitive memory content, recordings, transcripts, prompts, or generated summaries.
-- Plan deletion and export implications before shipping data-heavy features.
-- Treat voice recordings as highly sensitive.
+Verification:
 
-## Verification
+- Defines acceptance criteria before implementation.
+- Adds tests for models, policies, requests, jobs, and services as appropriate.
+- Manually verifies mobile layout for user-facing flows.
+- Documents any verification gaps before considering the feature complete.
 
-- Define acceptance criteria before implementation.
-- Add tests for models, policies, requests, jobs, and services as appropriate.
-- Manually verify mobile layout for user-facing flows.
-- Document any verification gaps before considering a feature complete.
+## High-Risk Checklist
+
+Use in addition to the Standard Path checklist when work touches AI interpretation, child data protection, privacy, deletion, export, authorization boundaries, provider behavior, billing, or durable architecture.
+
+AI behavior:
+
+- Keeps AI gentle, non-clinical, and non-diagnostic.
+- Prevents AI from labeling, scoring, ranking, diagnosing, or replacing parent judgment.
+- Requires parent review before AI-assisted content is saved, sent, or shared.
+- Keeps AI failures from blocking access to original memories.
+- Uses `docs/architecture/ai-architecture.md` for AI implementation details.
+
+Privacy and child data:
+
+- Collects the minimum useful child data.
+- Scopes child data to the authorized parent or household model.
+- Avoids logging sensitive memory content, recordings, transcripts, prompts, or generated summaries.
+- Plans deletion and export implications before shipping data-heavy features.
+- Treats voice recordings and transcripts as highly sensitive.
+
+Mobile and native implications:
+
+- Avoids hover-only and desktop-only interactions.
+- Keeps screens focused and navigation predictable.
+- Notes native wrapper implications before depending on browser APIs.
+- Treats voice recording as a sensitive mobile capability that needs explicit design and permission handling.

@@ -28,45 +28,19 @@ For documentation-only changes, verify:
 
 ## Product Safety Checks
 
-Every user-facing feature should pass these checks:
-
-- Does it support the product north star?
-- Does it avoid parenting scores, child scores, diagnoses, or clinical claims?
-- Does it keep the parent in review/control of AI-generated content?
-- Does it make privacy expectations clear?
-- Does it avoid unnecessary collection of child data?
-- Does it support deletion or future deletion strategy where relevant?
+For user-facing product work, apply the Standard Path checklist in `docs/features/_constraints.md`.
 
 ## AI Feature Checks
 
-AI-assisted behavior requires verification beyond normal tests:
-
-- Inputs sent to AI are limited to what the feature requires.
-- Prompts instruct the model to be gentle, non-clinical, and non-diagnostic.
-- Outputs are labeled as AI-assisted where appropriate.
-- Parents can review before saving, sending, or sharing.
-- Failure states are graceful and do not block access to original memories.
-- Generated summaries preserve uncertainty and avoid overclaiming.
+For AI-assisted behavior, apply the High-Risk checklist in `docs/features/_constraints.md` and the implementation guidance in `docs/architecture/ai-architecture.md`.
 
 ## Data And Privacy Checks
 
-When a change touches child data:
-
-- Confirm authorization boundaries.
-- Confirm records are scoped to the owning parent or household model.
-- Avoid logging sensitive child content, voice transcripts, prompts, or AI responses.
-- Confirm file uploads and voice recordings have a clear storage path.
-- Confirm deletion implications are understood before shipping.
+When a change touches child data, privacy, deletion, export, authorization, uploads, recordings, transcripts, prompts, or generated summaries, apply the High-Risk checklist in `docs/features/_constraints.md`.
 
 ## Mobile Checks
 
-Because the app should eventually work in a Hotwire Native wrapper:
-
-- Avoid desktop-only interactions.
-- Avoid hover-required controls.
-- Keep navigation shallow and predictable.
-- Prefer native-friendly forms and buttons.
-- Ensure audio recording flows have a clear fallback plan before implementation.
+For user-facing mobile flows or future Hotwire Native implications, apply the mobile and native checks in `docs/features/_constraints.md` and the guidance in `docs/architecture/mobile-strategy.md`.
 
 ## Completion Standard
 
