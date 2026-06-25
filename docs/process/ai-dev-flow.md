@@ -6,6 +6,8 @@ AI-assisted development for this app is artifact-driven. Chat is useful for expl
 
 Meaningful changes require a durable artifact before implementation.
 
+Use the lowest risk tier that honestly fits the change. When unsure, choose the higher tier.
+
 A meaningful change includes:
 
 - New product behavior
@@ -18,9 +20,76 @@ A meaningful change includes:
 
 Small fixes, formatting, and local refactors may proceed without a new brief when they do not alter product behavior.
 
+## Risk Tiers
+
+The tier controls how much durable context, documentation, and verification the task needs. It should reduce process cost for low-risk work without weakening product, privacy, or AI safety checks.
+
+### Fast Path
+
+Use the fast path for low-risk work that does not change product behavior, data contracts, privacy expectations, AI behavior, authorization, navigation, or the product promise.
+
+Examples:
+
+- Typos and copy edits that do not change the product promise
+- Formatting and lint-only changes
+- Small local refactors with no behavior change
+- Test cleanup or narrow test additions
+- Minor styling fixes that do not affect a core flow
+
+Fast path expectations:
+
+- Read only the relevant files and any immediately necessary docs.
+- Do not create a new feature brief.
+- Implement the narrow change.
+- Run the narrowest useful verification.
+- Leave a concise handoff with files changed and checks run.
+
+### Standard Path
+
+Use the standard path for meaningful product or architecture work where the risk is real but bounded.
+
+Examples:
+
+- New product behavior inside the MVP scope
+- Data model changes that do not introduce sensitive new categories
+- User-facing flows or navigation changes
+- Background jobs or scheduled workflows
+- Product copy that affects expectations or trust
+
+Standard path expectations:
+
+- Follow the Standard Flow below.
+- Create or update the relevant feature brief before coding.
+- Read the product, feature, architecture, and verification docs that apply to the change.
+- Challenge scope before implementation.
+- Run verification appropriate to the behavior changed.
+- Leave the full handoff trail.
+
+### High-Risk Path
+
+Use the high-risk path when a change touches child data protection, AI interpretation, privacy, deletion, export, authorization boundaries, provider behavior, billing, or durable architectural direction.
+
+Examples:
+
+- AI prompts, summaries, transcription, reflection letters, or model/provider choices
+- Voice recordings, transcripts, exports, deletion, or retention behavior
+- Authorization and account ownership boundaries
+- Data sent to third-party services
+- Mobile wrapper strategy or native-only capabilities
+- Subscription and monetization choices
+
+High-risk path expectations:
+
+- Follow the Standard Flow with extra scrutiny.
+- Read the relevant architecture docs and decision records before coding.
+- Document data minimization, parent review, failure behavior, and deletion/export implications where relevant.
+- Create a decision record when choosing among durable alternatives.
+- Prefer smaller implementation slices and stronger verification.
+- Explicitly name unresolved risks in the handoff.
+
 ## Standard Flow
 
-Use this flow for meaningful product and architecture work:
+Use this flow for standard-path and high-risk-path work:
 
 1. Orient
 2. Define
