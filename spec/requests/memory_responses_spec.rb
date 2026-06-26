@@ -30,6 +30,21 @@ RSpec.describe "/child_profiles/:child_profile_id/memory_responses", type: :requ
       expect(response.body).to include("We made pancakes and I flipped one.")
     end
 
+    it "renders archive questions from the saved prompt snapshot" do
+      create(:memory_response,
+        child_profile: child_profile,
+        daily_question: daily_question,
+        prompt_snapshot: "What would you add to the treehouse?",
+        response_text: "A rope ladder and a tiny library.",
+        answered_on: Date.new(2026, 6, 24))
+
+      get child_profile_memory_responses_url(child_profile)
+
+      expect(response).to be_successful
+      expect(response.body).to include("What would you add to the treehouse?")
+      expect(response.body).not_to include("What made you smile today?")
+    end
+
     it "renders a gentle empty state with capture navigation" do
       get child_profile_memory_responses_url(child_profile)
 
@@ -104,6 +119,35 @@ RSpec.describe "/child_profiles/:child_profile_id/memory_responses", type: :requ
       expect(response.body).to include("What made you smile today?")
       expect(response.body).to include("We made pancakes and I flipped one.")
       expect(response.body).to include("June 25, 2026")
+    end
+
+    it "renders detail questions from the saved prompt snapshot" do
+      memory_response = create(:memory_response,
+        child_profile: child_profile,
+        daily_question: daily_question,
+        prompt_snapshot: "What would you add to the treehouse?",
+        response_text: "A rope ladder and a tiny library.",
+        answered_on: Date.new(2026, 6, 25))
+
+      get child_profile_memory_response_url(child_profile, memory_response)
+
+      expect(response).to be_successful
+      expect(response.body).to include("What would you add to the treehouse?")
+      expect(response.body).not_to include("What made you smile today?")
+    end
+
+    it "falls back to the daily question prompt when a snapshot is blank" do
+      memory_response = create(:memory_response,
+        child_profile: child_profile,
+        daily_question: daily_question,
+        response_text: "We made pancakes and I flipped one.",
+        answered_on: Date.new(2026, 6, 25))
+      memory_response.update_column(:prompt_snapshot, "")
+
+      get child_profile_memory_response_url(child_profile, memory_response)
+
+      expect(response).to be_successful
+      expect(response.body).to include("What made you smile today?")
     end
 
     it "renders private playback for a memory with voice" do
@@ -264,6 +308,7 @@ RSpec.describe "/child_profiles/:child_profile_id/memory_responses", type: :requ
       expect(response).to redirect_to(child_profile_url(child_profile))
       expect(flash[:notice]).to eq("Saved to #{child_profile.name}'s memory archive. Come back tomorrow for another question.")
       expect(child_profile.memory_responses.last.response_text).to eq("We made pancakes and I flipped one.")
+      expect(child_profile.memory_responses.last.prompt_snapshot).to eq("What made you smile today?")
     end
 
     it "creates an audio-only response for a child profile owned by the signed-in user" do

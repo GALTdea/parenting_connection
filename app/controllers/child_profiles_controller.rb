@@ -13,7 +13,6 @@ class ChildProfilesController < ApplicationController
     @todays_question = DailyQuestionSelector.new(child_profile: @child_profile).question
     @memory_responses = @child_profile
       .memory_responses
-      .includes(:daily_question)
       .with_attached_voice_recording
       .order(answered_on: :desc, created_at: :desc)
       .limit(5)

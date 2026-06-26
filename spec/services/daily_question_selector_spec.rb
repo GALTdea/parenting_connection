@@ -27,6 +27,18 @@ RSpec.describe DailyQuestionSelector do
       expect(child_profile.daily_question_selections.where(selected_on: Date.new(2026, 6, 26)).count).to eq(1)
     end
 
+    it 'stores curated source metadata and the presented prompt for a new selection' do
+      child_profile = create(:child_profile)
+      create(:daily_question, prompt: "What made you smile today?")
+
+      question = described_class.new(child_profile: child_profile, date: Date.new(2026, 6, 26)).question
+      selection = child_profile.daily_question_selections.find_by!(selected_on: Date.new(2026, 6, 26))
+
+      expect(selection.daily_question).to eq(question)
+      expect(selection.source_type).to eq("curated")
+      expect(selection.presented_prompt).to eq("What made you smile today?")
+    end
+
     it 'does not newly select inactive questions' do
       child_profile = create(:child_profile)
       create(:daily_question, active: false, prompt: "What felt quiet today?")

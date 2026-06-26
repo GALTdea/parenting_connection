@@ -17,14 +17,36 @@ class MemoryResponse < ApplicationRecord
   belongs_to :daily_question
   has_one_attached :voice_recording
 
+  before_validation :snapshot_prompt, on: :create
+
   validates :answered_on, presence: true
+  validates :prompt_snapshot, presence: true
   validate :response_text_or_voice_recording_present
   validate :daily_question_must_be_active
   validate :voice_recording_must_be_audio
   validate :voice_recording_must_be_within_size_limit
   validate :voice_recording_must_be_within_duration_limit
 
+  def prompt_text
+    prompt_snapshot.presence || daily_question&.prompt
+  end
+
   private
+
+  def snapshot_prompt
+    return if prompt_snapshot.present?
+
+    self.prompt_snapshot = selected_daily_question_selection&.presented_prompt.presence || daily_question&.prompt
+  end
+
+  def selected_daily_question_selection
+    return if child_profile.blank? || answered_on.blank? || daily_question_id.blank?
+
+    child_profile.daily_question_selections.find_by(
+      daily_question_id: daily_question_id,
+      selected_on: answered_on
+    )
+  end
 
   def response_text_or_voice_recording_present
     return if response_text.present? || voice_recording.attached?

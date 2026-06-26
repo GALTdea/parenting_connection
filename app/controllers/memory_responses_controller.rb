@@ -10,7 +10,7 @@ class MemoryResponsesController < ApplicationController
   end
 
   def show
-    @memory_response = @child_profile.memory_responses.includes(:daily_question).find(params.expect(:id))
+    @memory_response = @child_profile.memory_responses.find(params.expect(:id))
     authorize @memory_response
   end
 
@@ -94,7 +94,6 @@ class MemoryResponsesController < ApplicationController
   def ordered_memory_responses
     @child_profile
       .memory_responses
-      .includes(:daily_question)
       .with_attached_voice_recording
       .order(answered_on: :desc, created_at: :desc)
   end

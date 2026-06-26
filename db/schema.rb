@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_26_010100) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_26_020000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -63,10 +63,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_26_010100) do
     t.bigint "child_profile_id", null: false
     t.datetime "created_at", null: false
     t.bigint "daily_question_id", null: false
+    t.text "presented_prompt", null: false
     t.date "selected_on", null: false
+    t.string "source_type", default: "curated", null: false
     t.datetime "updated_at", null: false
     t.index ["child_profile_id", "daily_question_id", "selected_on"], name: "index_daily_question_selections_on_child_question_and_date"
     t.index ["child_profile_id", "selected_on"], name: "index_daily_question_selections_on_child_and_selected_on", unique: true
+    t.index ["child_profile_id", "source_type", "selected_on"], name: "index_daily_question_selections_on_child_source_and_date"
     t.index ["child_profile_id"], name: "index_daily_question_selections_on_child_profile_id"
     t.index ["daily_question_id"], name: "index_daily_question_selections_on_daily_question_id"
   end
@@ -105,6 +108,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_26_010100) do
     t.bigint "child_profile_id", null: false
     t.datetime "created_at", null: false
     t.bigint "daily_question_id", null: false
+    t.text "prompt_snapshot", null: false
     t.text "response_text"
     t.datetime "updated_at", null: false
     t.index ["child_profile_id", "answered_on"], name: "index_memory_responses_on_child_profile_id_and_answered_on"

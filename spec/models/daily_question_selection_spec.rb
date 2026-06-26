@@ -12,6 +12,27 @@ RSpec.describe DailyQuestionSelection, type: :model do
   end
 
   describe 'validations' do
+    it 'defaults the source type to curated' do
+      selection = build(:daily_question_selection, source_type: nil)
+
+      expect(selection).to be_valid
+      expect(selection.source_type).to eq("curated")
+    end
+
+    it 'snapshots the selected daily question prompt' do
+      daily_question = create(:daily_question, prompt: "What felt cozy today?")
+      selection = create(:daily_question_selection, daily_question: daily_question)
+
+      expect(selection.presented_prompt).to eq("What felt cozy today?")
+    end
+
+    it 'rejects unsupported source types' do
+      selection = build(:daily_question_selection, source_type: "mood_score")
+
+      expect(selection).not_to be_valid
+      expect(selection.errors[:source_type]).to include("is not included in the list")
+    end
+
     it 'requires one selection per child and date' do
       child_profile = create(:child_profile)
       create(:daily_question_selection, child_profile: child_profile, selected_on: Date.new(2026, 6, 26))

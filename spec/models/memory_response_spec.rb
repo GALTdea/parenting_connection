@@ -16,6 +16,37 @@ RSpec.describe MemoryResponse, type: :model do
   end
 
   describe 'validations' do
+    it 'snapshots the daily question prompt at save time' do
+      daily_question = create(:daily_question, prompt: "What felt cozy today?")
+
+      memory_response = create(:memory_response, daily_question: daily_question)
+
+      expect(memory_response.prompt_snapshot).to eq("What felt cozy today?")
+    end
+
+    it 'snapshots the selected presented prompt when available' do
+      child_profile = create(:child_profile)
+      daily_question = create(:daily_question, prompt: "What felt cozy today?")
+      create(:daily_question_selection,
+        child_profile: child_profile,
+        daily_question: daily_question,
+        selected_on: Date.new(2026, 6, 26),
+        presented_prompt: "You once talked about a cozy fort. What would you add next?")
+
+      memory_response = create(:memory_response,
+        child_profile: child_profile,
+        daily_question: daily_question,
+        answered_on: Date.new(2026, 6, 26))
+
+      expect(memory_response.prompt_snapshot).to eq("You once talked about a cozy fort. What would you add next?")
+    end
+
+    it 'uses the daily question prompt as a fallback display prompt' do
+      memory_response = build(:memory_response, prompt_snapshot: nil)
+
+      expect(memory_response.prompt_text).to eq(memory_response.daily_question.prompt)
+    end
+
     it 'requires response text or a voice recording' do
       memory_response = build(:memory_response, response_text: nil)
 
