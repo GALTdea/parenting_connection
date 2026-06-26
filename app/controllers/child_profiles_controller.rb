@@ -10,7 +10,12 @@ class ChildProfilesController < ApplicationController
 
   def show
     authorize @child_profile
-    @memory_responses = @child_profile.memory_responses.includes(:daily_question).order(answered_on: :desc, created_at: :desc).limit(5)
+    @memory_responses = @child_profile
+      .memory_responses
+      .includes(:daily_question)
+      .with_attached_voice_recording
+      .order(answered_on: :desc, created_at: :desc)
+      .limit(5)
   end
 
   def new

@@ -2,7 +2,7 @@ Voice Recordings - Stage 4
 
 Status
 
-Draft. Architectural decisions resolved; awaiting implementation approval.
+Implemented. Awaiting manual release verification before moving to completed.
 
 Risk Tier
 
@@ -370,11 +370,39 @@ Resolved:
 * Support memory-level deletion only in Stage 4.
 * Keep transcription and AI out of scope.
 
+Implemented:
+
+* Added Active Storage tables.
+* Added `MemoryResponse#voice_recording` as a single attached audio artifact.
+* Allowed audio-only memories by making `response_text` optional when audio is attached.
+* Added model validation for allowed audio content types, 100 MB file size, and submitted recording duration.
+* Added parent-initiated Stimulus recording controls with preview, remove-before-save, max duration, max size, and file-input fallback.
+* Disabled default Active Storage routes and added child-scoped authenticated playback through `MemoryResponsesController#voice_recording`.
+* Added archive, recent-memory, and detail cues for voice memories.
+* Kept archive playback out of Stage 4.
+* Added S3-compatible storage configuration for production setup while leaving development and test on local storage.
+
 ---
 
 Verification Results
 
-Pending implementation.
+Automated:
+
+* `bundle exec rspec spec/models/memory_response_spec.rb spec/requests/memory_responses_spec.rb` - 29 examples, 0 failures.
+* `bundle exec rspec` - 155 examples, 0 failures.
+* `bundle exec rubocop` - 128 files inspected, no offenses detected.
+
+Manual:
+
+* Ran `bin/rails db:migrate`.
+* Confirmed the voice playback route is child-scoped: `GET /child_profiles/:child_profile_id/memory_responses/:id/voice_recording`.
+
+Known verification gaps before release:
+
+* Browser recording has not yet been manually verified in current iOS Safari, current Android Chrome, desktop Chrome, or desktop Safari.
+* The file-input fallback has not yet been manually verified in a browser without reliable recording support.
+* Production S3-compatible object storage has not yet been configured with real credentials.
+* Implementation testing has not yet determined whether the initial 100 MB limit should be lowered for target browsers and network conditions.
 
 ---
 

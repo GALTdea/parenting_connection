@@ -37,9 +37,16 @@
                             child_profile_memory_response_path(@child_profile, memory_response),
                             class: "link-hover" %>
                     </h3>
-                    <p class="text-base-content/75">
-                      <%= truncate(memory_response.response_text, length: 180, separator: " ") %>
-                    </p>
+                    <% if memory_response.voice_recording.attached? %>
+                      <p class="text-sm font-medium text-primary">Includes voice</p>
+                    <% end %>
+                    <% if memory_response.response_text.present? %>
+                      <p class="text-base-content/75">
+                        <%= truncate(memory_response.response_text, length: 180, separator: " ") %>
+                      </p>
+                    <% else %>
+                      <p class="text-base-content/75">Voice memory saved for this question.</p>
+                    <% end %>
                   </div>
                   <%= link_to "Read memory",
                         child_profile_memory_response_path(@child_profile, memory_response),

@@ -15,6 +15,21 @@ class MemoryResponsesController < ApplicationController
     authorize @memory_response
   end
 
+  def voice_recording
+    @memory_response = @child_profile.memory_responses.find(params.expect(:id))
+    authorize @memory_response, :show?
+
+    return head :not_found unless @memory_response.voice_recording.attached?
+
+    voice_recording = @memory_response.voice_recording
+
+    response.headers["Cache-Control"] = "private, no-store"
+    send_data voice_recording.download,
+      filename: voice_recording.filename.to_s,
+      type: voice_recording.content_type,
+      disposition: "inline"
+  end
+
   def new
     @memory_response = @child_profile.memory_responses.build(answered_on: Date.current)
     authorize @memory_response
@@ -42,10 +57,14 @@ class MemoryResponsesController < ApplicationController
   end
 
   def ordered_memory_responses
-    @child_profile.memory_responses.includes(:daily_question).order(answered_on: :desc, created_at: :desc)
+    @child_profile
+      .memory_responses
+      .includes(:daily_question)
+      .with_attached_voice_recording
+      .order(answered_on: :desc, created_at: :desc)
   end
 
   def memory_response_params
-    params.expect(memory_response: [ :daily_question_id, :response_text, :answered_on ])
+    params.expect(memory_response: [ :daily_question_id, :response_text, :answered_on, :voice_recording, :voice_recording_duration_seconds ])
   end
 end

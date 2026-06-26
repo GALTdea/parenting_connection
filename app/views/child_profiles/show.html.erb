@@ -64,7 +64,14 @@
                       child_profile_memory_response_path(@child_profile, memory_response),
                       class: "link-hover" %>
               </h3>
-              <p class="whitespace-pre-line text-base-content/80"><%= memory_response.response_text %></p>
+              <% if memory_response.voice_recording.attached? %>
+                <p class="text-sm font-medium text-primary">Includes voice</p>
+              <% end %>
+              <% if memory_response.response_text.present? %>
+                <p class="whitespace-pre-line text-base-content/80"><%= memory_response.response_text %></p>
+              <% else %>
+                <p class="text-base-content/70">Voice memory saved for this question.</p>
+              <% end %>
             </div>
           </article>
         <% end %>

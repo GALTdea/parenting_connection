@@ -22,7 +22,20 @@
   </div>
 
   <article class="rounded-lg bg-base-100 p-6 shadow-sm">
-    <p class="whitespace-pre-line text-lg leading-8 text-base-content"><%= @memory_response.response_text %></p>
+    <% if @memory_response.voice_recording.attached? %>
+      <div class="mb-6 space-y-3">
+        <p class="text-sm font-medium text-primary">Voice recording saved with this memory</p>
+        <audio class="w-full" controls src="<%= voice_recording_child_profile_memory_response_path(@child_profile, @memory_response) %>">
+          Your browser does not support audio playback.
+        </audio>
+      </div>
+    <% end %>
+
+    <% if @memory_response.response_text.present? %>
+      <p class="whitespace-pre-line text-lg leading-8 text-base-content"><%= @memory_response.response_text %></p>
+    <% else %>
+      <p class="text-base-content/70">This memory was saved as a voice recording.</p>
+    <% end %>
   </article>
 
   <div class="flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">

@@ -4,6 +4,12 @@ RSpec.describe "/child_profiles/:child_profile_id/memory_responses", type: :requ
   let(:user) { create(:user) }
   let(:child_profile) { create(:child_profile, user:) }
   let(:daily_question) { create(:daily_question, prompt: "What made you smile today?") }
+  let(:audio_upload) do
+    Rack::Test::UploadedFile.new(
+      Rails.root.join("spec/fixtures/files/sample_audio.webm"),
+      "audio/webm"
+    )
+  end
 
   before { sign_in user }
 
@@ -100,6 +106,21 @@ RSpec.describe "/child_profiles/:child_profile_id/memory_responses", type: :requ
       expect(response.body).to include("June 25, 2026")
     end
 
+    it "renders private playback for a memory with voice" do
+      memory_response = create(:memory_response,
+        child_profile: child_profile,
+        daily_question: daily_question,
+        response_text: "Listen to this moment.")
+      memory_response.voice_recording.attach(audio_upload)
+
+      get child_profile_memory_response_url(child_profile, memory_response)
+
+      expect(response).to be_successful
+      expect(response.body).to include("Voice recording saved with this memory")
+      expect(response.body).to include(voice_recording_child_profile_memory_response_path(child_profile, memory_response))
+      expect(response.body).not_to include("/rails/active_storage")
+    end
+
     it "does not render another user's memory response" do
       other_child_profile = create(:child_profile)
       memory_response = create(:memory_response, child_profile: other_child_profile)
@@ -119,6 +140,40 @@ RSpec.describe "/child_profiles/:child_profile_id/memory_responses", type: :requ
     end
   end
 
+  describe "GET /:id/voice_recording" do
+    it "serves the voice recording for the authorized parent" do
+      memory_response = create(:memory_response, child_profile: child_profile)
+      memory_response.voice_recording.attach(audio_upload)
+
+      get voice_recording_child_profile_memory_response_url(child_profile, memory_response)
+
+      expect(response).to be_successful
+      expect(response.media_type).to eq("audio/webm")
+      expect(response.body).to eq("sample audio fixture\n")
+      expect(response.headers["Cache-Control"]).to include("no-store")
+    end
+
+    it "does not serve another parent's voice recording" do
+      other_child_profile = create(:child_profile)
+      memory_response = create(:memory_response, child_profile: other_child_profile)
+      memory_response.voice_recording.attach(audio_upload)
+
+      get voice_recording_child_profile_memory_response_url(other_child_profile, memory_response)
+
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it "does not serve a recording through the wrong child profile" do
+      other_child_profile = create(:child_profile, user: user, name: "Riley")
+      memory_response = create(:memory_response, child_profile: other_child_profile)
+      memory_response.voice_recording.attach(audio_upload)
+
+      get voice_recording_child_profile_memory_response_url(child_profile, memory_response)
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
   describe "GET /new" do
     it "renders the response form for a child profile owned by the signed-in user" do
       daily_question
@@ -128,6 +183,8 @@ RSpec.describe "/child_profiles/:child_profile_id/memory_responses", type: :requ
       expect(response).to be_successful
       expect(response.body).to include("Capture a response for #{child_profile.name}")
       expect(response.body).to include("What made you smile today?")
+      expect(response.body).to include("Record a voice memory")
+      expect(response.body).to include("Audio file")
     end
 
     it "does not render the form for another user's child profile" do
@@ -155,6 +212,25 @@ RSpec.describe "/child_profiles/:child_profile_id/memory_responses", type: :requ
       expect(child_profile.memory_responses.last.response_text).to eq("We made pancakes and I flipped one.")
     end
 
+    it "creates an audio-only response for a child profile owned by the signed-in user" do
+      expect do
+        post child_profile_memory_responses_url(child_profile), params: {
+          memory_response: {
+            daily_question_id: daily_question.id,
+            response_text: "",
+            answered_on: "2026-06-25",
+            voice_recording: audio_upload,
+            voice_recording_duration_seconds: "12"
+          }
+        }
+      end.to change(child_profile.memory_responses, :count).by(1)
+
+      memory_response = child_profile.memory_responses.last
+      expect(response).to redirect_to(child_profile_url(child_profile))
+      expect(memory_response.response_text).to eq("")
+      expect(memory_response.voice_recording).to be_attached
+    end
+
     it "renders validation errors without losing the entered response" do
       daily_question
 
@@ -171,6 +247,27 @@ RSpec.describe "/child_profiles/:child_profile_id/memory_responses", type: :requ
       expect(response).to have_http_status(:unprocessable_content)
       expect(response.body).to include("Please check the response.")
       expect(response.body).to include("I want this text to stay visible.")
+    end
+
+    it "rejects an invalid audio upload with a clear error" do
+      invalid_upload = Rack::Test::UploadedFile.new(
+        Rails.root.join("spec/fixtures/files/sample_audio.webm"),
+        "text/plain"
+      )
+
+      expect do
+        post child_profile_memory_responses_url(child_profile), params: {
+          memory_response: {
+            daily_question_id: daily_question.id,
+            response_text: "",
+            answered_on: "2026-06-25",
+            voice_recording: invalid_upload
+          }
+        }
+      end.not_to change(MemoryResponse, :count)
+
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(response.body).to include("Voice recording must be an audio file")
     end
 
     it "does not create a response for another user's child profile" do

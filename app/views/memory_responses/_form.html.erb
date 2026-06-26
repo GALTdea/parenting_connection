@@ -23,13 +23,71 @@
   </div>
 
   <div class="form-control w-full">
-    <%= form.label :response_text, "Response", class: "label font-medium" %>
+    <%= form.label :response_text, "Response or note", class: "label font-medium" %>
     <%= form.text_area :response_text,
           rows: 8,
           class: "textarea textarea-bordered min-h-40 w-full",
-          placeholder: "Write down what they said, in their words when you can.",
+          placeholder: "Write down what they said, or add a note to go with a voice memory.",
           autofocus: true %>
   </div>
+
+  <section class="rounded-lg border border-base-300 p-4" data-controller="voice-recorder">
+    <div class="space-y-4">
+      <div>
+        <h2 class="text-lg font-semibold text-base-content">Record a voice memory</h2>
+        <p class="mt-1 text-sm text-base-content/70">
+          Voice memories are for meaningful conversation moments, not continuous recording. You can save text, voice, or both.
+        </p>
+      </div>
+
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <button type="button"
+                class="btn btn-outline w-full sm:w-auto"
+                data-voice-recorder-target="startButton"
+                data-action="voice-recorder#start">
+          Start recording
+        </button>
+        <button type="button"
+                class="btn btn-outline w-full sm:w-auto"
+                data-voice-recorder-target="stopButton"
+                data-action="voice-recorder#stop">
+          Stop recording
+        </button>
+        <span class="text-sm font-medium text-base-content/70" data-voice-recorder-target="timer">0:00</span>
+      </div>
+
+      <p class="text-sm text-base-content/70" data-voice-recorder-target="status">
+        Your browser will ask for microphone permission before recording.
+      </p>
+
+      <audio class="w-full" controls hidden data-voice-recorder-target="audio"></audio>
+
+      <button type="button"
+              class="btn btn-ghost btn-sm"
+              hidden
+              data-voice-recorder-target="removeButton"
+              data-action="voice-recorder#remove">
+        Remove recording
+      </button>
+
+      <div class="form-control w-full">
+        <%= form.label :voice_recording, "Audio file", class: "label font-medium" %>
+        <%= form.file_field :voice_recording,
+              accept: MemoryResponse::ALLOWED_VOICE_RECORDING_CONTENT_TYPES.join(","),
+              class: "file-input file-input-bordered w-full",
+              data: {
+                voice_recorder_target: "fileInput",
+                action: "change->voice-recorder#fileSelected"
+              } %>
+        <p class="mt-2 text-xs text-base-content/60">
+          Recordings can be up to 15 minutes and 100 MB.
+        </p>
+      </div>
+
+      <%= form.hidden_field :voice_recording_duration_seconds,
+            data: { voice_recorder_target: "durationInput" } %>
+    </div>
+  </section>
 
   <div class="form-control w-full">
     <%= form.label :answered_on, "Date", class: "label font-medium" %>
@@ -38,6 +96,6 @@
 
   <div class="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-end">
     <%= link_to "Cancel", child_profile_path(child_profile), class: "btn btn-ghost w-full sm:w-auto" %>
-    <%= form.submit "Save response", class: "btn btn-primary w-full sm:w-auto" %>
+    <%= form.submit "Save memory", class: "btn btn-primary w-full sm:w-auto" %>
   </div>
 <% end %>
