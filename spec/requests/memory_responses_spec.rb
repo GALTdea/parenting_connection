@@ -209,6 +209,7 @@ RSpec.describe "/child_profiles/:child_profile_id/memory_responses", type: :requ
       end.to change(child_profile.memory_responses, :count).by(1)
 
       expect(response).to redirect_to(child_profile_url(child_profile))
+      expect(flash[:notice]).to eq("Saved to #{child_profile.name}'s memory archive. Come back tomorrow for another question.")
       expect(child_profile.memory_responses.last.response_text).to eq("We made pancakes and I flipped one.")
     end
 

@@ -5,50 +5,53 @@
 <% end %>
 
 <div class="mx-auto flex w-full max-w-3xl flex-col gap-6">
-  <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-    <div>
-      <p class="text-sm font-medium text-primary">Child profile</p>
-      <h1 class="text-3xl font-bold tracking-normal text-base-content"><%= @child_profile.name %></h1>
-    </div>
-
-    <div class="flex flex-col gap-2 sm:flex-row">
-      <%= link_to "Edit", edit_child_profile_path(@child_profile), class: "btn btn-primary w-full sm:w-auto" %>
-      <%= button_to "Remove",
-            @child_profile,
-            method: :delete,
-            form: { data: { turbo_confirm: "Remove this child profile?" } },
-            class: "btn btn-ghost w-full sm:w-auto" %>
-    </div>
-  </div>
-
   <section class="rounded-lg bg-base-100 p-6 shadow-sm">
-    <dl class="grid gap-4 sm:grid-cols-2">
-      <div>
-        <dt class="text-sm font-medium text-base-content/60">First name or nickname</dt>
-        <dd class="mt-1 text-lg font-semibold text-base-content"><%= @child_profile.name %></dd>
+    <div class="space-y-6">
+      <div class="space-y-2">
+        <p class="text-sm font-medium text-primary">Today's conversation</p>
+        <h1 class="text-3xl font-bold tracking-normal text-base-content"><%= @child_profile.name %></h1>
+        <p class="text-base-content/70">
+          One small question can become a memory you both get to keep.
+        </p>
       </div>
-      <div>
-        <dt class="text-sm font-medium text-base-content/60">Birthday</dt>
-        <dd class="mt-1 text-lg font-semibold text-base-content"><%= @child_profile.birthday.to_fs(:long) %></dd>
-      </div>
-    </dl>
+
+      <% if @todays_question.present? %>
+        <div class="rounded-lg border border-base-300 bg-base-100 p-5">
+          <p class="text-sm font-medium text-base-content/60">Today's question</p>
+          <h2 class="mt-2 text-2xl font-semibold leading-snug text-base-content">
+            <%= @todays_question.prompt %>
+          </h2>
+        </div>
+
+        <div class="flex flex-col gap-3 sm:flex-row">
+          <%= link_to "Answer today's question",
+                new_child_profile_memory_response_path(@child_profile),
+                class: "btn btn-primary w-full sm:w-auto" %>
+          <%= link_to "Memory archive",
+                child_profile_memory_responses_path(@child_profile),
+                class: "btn btn-outline w-full sm:w-auto" %>
+        </div>
+      <% else %>
+        <div class="rounded-lg border border-dashed border-base-300 p-5">
+          <h2 class="text-xl font-semibold text-base-content">No questions are ready yet</h2>
+          <p class="mt-2 text-base-content/70">
+            Add active daily questions before capturing a new memory.
+          </p>
+        </div>
+      <% end %>
+    </div>
   </section>
 
   <section class="rounded-lg bg-base-100 p-6 shadow-sm">
-    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <div>
-        <p class="text-sm font-medium text-primary">Daily ritual</p>
+        <p class="text-sm font-medium text-primary">Memory archive</p>
         <h2 class="text-2xl font-semibold text-base-content">Recent memories</h2>
       </div>
 
-      <div class="flex flex-col gap-2 sm:flex-row">
-        <%= link_to "Memory archive",
-              child_profile_memory_responses_path(@child_profile),
-              class: "btn btn-outline w-full sm:w-auto" %>
-        <%= link_to "Answer a question",
-              new_child_profile_memory_response_path(@child_profile),
-              class: "btn btn-primary w-full sm:w-auto" %>
-      </div>
+      <%= link_to "Open archive",
+            child_profile_memory_responses_path(@child_profile),
+            class: "btn btn-ghost w-full sm:w-auto" %>
     </div>
 
     <% if @memory_responses.any? %>
@@ -81,10 +84,39 @@
         <div class="max-w-xl space-y-3">
           <h3 class="text-lg font-semibold text-base-content">This archive will grow one conversation at a time</h3>
           <p class="text-base-content/70">
-            Start with one small moment. Choose a question and save the words you want to remember.
+            Start with one small moment. Answer today's question and save the words you want to remember.
           </p>
         </div>
       </div>
     <% end %>
+  </section>
+
+  <section class="rounded-lg bg-base-100 p-6 shadow-sm">
+    <div class="space-y-5">
+      <div>
+        <p class="text-sm font-medium text-primary">Profile details</p>
+        <h2 class="text-xl font-semibold text-base-content">About <%= @child_profile.name %></h2>
+      </div>
+
+      <dl class="grid gap-4 sm:grid-cols-2">
+        <div>
+          <dt class="text-sm font-medium text-base-content/60">First name or nickname</dt>
+          <dd class="mt-1 text-lg font-semibold text-base-content"><%= @child_profile.name %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-base-content/60">Birthday</dt>
+          <dd class="mt-1 text-lg font-semibold text-base-content"><%= @child_profile.birthday.to_fs(:long) %></dd>
+        </div>
+      </dl>
+
+      <div class="flex flex-col gap-2 border-t border-base-200 pt-4 sm:flex-row">
+        <%= link_to "Edit profile", edit_child_profile_path(@child_profile), class: "btn btn-outline w-full sm:w-auto" %>
+        <%= button_to "Remove profile",
+              @child_profile,
+              method: :delete,
+              form: { data: { turbo_confirm: "Remove this child profile?" } },
+              class: "btn btn-ghost w-full sm:w-auto" %>
+      </div>
+    </div>
   </section>
 </div>

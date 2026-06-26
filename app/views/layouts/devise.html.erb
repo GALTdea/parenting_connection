@@ -2,8 +2,8 @@
 <html lang="en" data-theme="starter_light">
   <head>
     <%= display_meta_tags(
-  site: "My Rails Starter",
-  title: "Sign in",
+  site: "Parenting Connection",
+  title: "Account",
   separator: "·"
 ) %>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -19,8 +19,11 @@
       <!-- Logo / App name -->
       <div class="text-center mb-8">
         <%= link_to root_path, class: "text-2xl font-bold text-primary" do %>
-          My Rails Starter
+          Parenting Connection
         <% end %>
+        <p class="mt-2 text-sm text-base-content/60">
+          A private place for the conversations you want to remember.
+        </p>
       </div>
 
       <%= render "shared/flash" %>
@@ -34,4 +37,3 @@
     </div>
   </body>
 </html>
-

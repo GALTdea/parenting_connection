@@ -10,6 +10,7 @@ class ChildProfilesController < ApplicationController
 
   def show
     authorize @child_profile
+    @todays_question = DailyQuestion.active.ordered.first
     @memory_responses = @child_profile
       .memory_responses
       .includes(:daily_question)
@@ -32,7 +33,7 @@ class ChildProfilesController < ApplicationController
     authorize @child_profile
 
     if @child_profile.save
-      redirect_to @child_profile, notice: "Child profile was created."
+      redirect_to @child_profile, notice: "#{@child_profile.name}'s memory archive is ready."
     else
       render :new, status: :unprocessable_entity
     end

@@ -2,30 +2,19 @@
   <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar placeholder">
     <div class="bg-primary text-primary-content rounded-full w-9">
       <span class="text-sm font-medium">
-        <%= current_user.name&.first&.upcase || "U" %>
+        <%= current_user.name.to_s.strip.presence&.first&.upcase || "U" %>
       </span>
     </div>
   </div>
   <ul tabindex="0"
       class="dropdown-content menu bg-base-100 rounded-box z-50 w-52 p-2 shadow-lg border border-base-300 mt-2">
     <li class="menu-title">
-      <span><%= current_user.name %></span>
-      <span class="text-xs font-normal opacity-60">
-        <%= current_user.status %>
-      </span>
+      <span><%= current_user.name.to_s.strip.presence || current_user.email %></span>
     </li>
     <div class="divider my-1"></div>
     <li>
-      <%= link_to "Profile", edit_user_path(current_user) %>
-    </li>
-    <li>
       <%= link_to "Change password", edit_user_registration_path %>
     </li>
-    <% if multi_tenant_mode? %>
-      <li>
-        <%= link_to "Spaces", spaces_path %>
-      </li>
-    <% end %>
     <% if current_user.admin? %>
       <div class="divider my-1"></div>
       <li>
@@ -41,4 +30,3 @@
     </li>
   </ul>
 </div>
-

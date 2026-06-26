@@ -40,7 +40,8 @@ class MemoryResponsesController < ApplicationController
     authorize @memory_response
 
     if @memory_response.save
-      redirect_to @child_profile, notice: "Response was saved."
+      redirect_to @child_profile,
+        notice: "Saved to #{@child_profile.name}'s memory archive. Come back tomorrow for another question."
     else
       render :new, status: :unprocessable_entity
     end

@@ -2,12 +2,12 @@
   <div class="avatar placeholder">
     <div class="bg-primary text-primary-content rounded-full w-8">
       <span class="text-xs">
-        <%= current_user.name&.first&.upcase || "U" %>
+        <%= current_user.name.to_s.strip.presence&.first&.upcase || "U" %>
       </span>
     </div>
   </div>
   <div class="flex-1 min-w-0">
-    <p class="text-sm font-medium truncate"><%= current_user.name %></p>
+    <p class="text-sm font-medium truncate"><%= current_user.name.to_s.strip.presence || "Parent account" %></p>
     <p class="text-xs text-base-content/60 truncate">
       <%= current_user.email %>
     </p>
@@ -24,4 +24,3 @@
     </svg>
   <% end %>
 </div>
-

@@ -16,6 +16,27 @@ RSpec.describe "/child_profiles", type: :request do
       expect(response.body).to include("Avery")
       expect(response.body).not_to include("Jordan")
     end
+
+    it "keeps starter account navigation out of the parent-facing shell" do
+      get child_profiles_url
+
+      expect(response).to be_successful
+      expect(response.body).to include("Children")
+      expect(response.body).not_to include("Spaces")
+      expect(response.body).not_to include("Profile")
+    end
+
+    context "when the parent account has no display name" do
+      let(:user) { create(:user, first_name: nil, last_name: nil) }
+
+      it "falls back to parent account copy instead of a blank menu identity" do
+        get child_profiles_url
+
+        expect(response).to be_successful
+        expect(response.body).to include("Parent account")
+        expect(response.body).to include(user.email)
+      end
+    end
   end
 
   describe "GET /child_profiles/new" do
@@ -38,6 +59,7 @@ RSpec.describe "/child_profiles", type: :request do
       end.to change(user.child_profiles, :count).by(1)
 
       expect(response).to redirect_to(child_profile_url(ChildProfile.last))
+      expect(flash[:notice]).to eq("Avery's memory archive is ready.")
       expect(ChildProfile.last.user).to eq(user)
     end
 
@@ -69,9 +91,39 @@ RSpec.describe "/child_profiles", type: :request do
 
       expect(response).to be_successful
       expect(response.body).to include(child_profile.name)
-      expect(response.body).to include("Answer a question")
+      expect(response.body).to include("Today's conversation")
+      expect(response.body).to include("Today's question")
+      expect(response.body).to include("Answer today&#39;s question")
       expect(response.body).to include("What made you smile today?")
       expect(response.body).to include("We read the same book twice.")
+    end
+
+    it "prioritizes the ritual before recent memories and profile management" do
+      child_profile = create(:child_profile, user: user, name: "Avery")
+      daily_question = create(:daily_question, prompt: "What made you smile today?")
+      create(:memory_response,
+        child_profile: child_profile,
+        daily_question: daily_question,
+        response_text: "We read the same book twice.")
+
+      get child_profile_url(child_profile)
+
+      body = response.body
+      expect(body.index("Today's conversation")).to be < body.index("Recent memories")
+      expect(body.index("Recent memories")).to be < body.index("Profile details")
+      expect(body.index("Answer today&#39;s question")).to be < body.index("Edit profile")
+      expect(body.index("Answer today&#39;s question")).to be < body.index("Remove profile")
+    end
+
+    it "keeps the empty memory state focused on today's question" do
+      child_profile = create(:child_profile, user: user)
+      create(:daily_question, prompt: "What made you smile today?")
+
+      get child_profile_url(child_profile)
+
+      expect(response).to be_successful
+      expect(response.body).to include("This archive will grow one conversation at a time")
+      expect(response.body).to include("Answer today's question and save the words you want to remember.")
     end
 
     it "does not render another user's child profile" do
