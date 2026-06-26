@@ -12,22 +12,36 @@
     </div>
   <% end %>
 
+  <% if selected_daily_question.present? %>
+    <section class="rounded-lg border border-base-300 bg-base-100 p-5">
+      <p class="text-sm font-medium text-primary">Today's question</p>
+      <h2 class="mt-2 text-2xl font-semibold leading-snug text-base-content">
+        <%= selected_daily_question.prompt %>
+      </h2>
+      <p class="mt-3 text-base-content/70">
+        Save what <%= child_profile.name %> said, or add a note you want to remember.
+      </p>
+    </section>
+  <% end %>
+
   <div class="form-control w-full">
-    <%= form.label :daily_question_id, "Question", class: "label font-medium" %>
+    <%= form.label :daily_question_id,
+          selected_daily_question.present? ? "Use a different question" : "Question",
+          class: "label font-medium" %>
     <%= form.collection_select :daily_question_id,
           daily_questions,
           :id,
           :prompt,
-          { prompt: "Choose a question" },
+          { prompt: selected_daily_question.present? ? nil : "Choose a question" },
           class: "select select-bordered w-full" %>
   </div>
 
   <div class="form-control w-full">
-    <%= form.label :response_text, "Response or note", class: "label font-medium" %>
+    <%= form.label :response_text, "What did your child say?", class: "label font-medium" %>
     <%= form.text_area :response_text,
           rows: 8,
           class: "textarea textarea-bordered min-h-40 w-full",
-          placeholder: "Write down what they said, or add a note to go with a voice memory.",
+          placeholder: "Notes you want to remember",
           autofocus: true %>
   </div>
 

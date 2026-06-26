@@ -2,7 +2,7 @@
 
 Status
 
-Audit complete. Stage 5A implemented. Stage 5B approved and in implementation.
+Audit complete. Stage 5A implemented. Stage 5B implemented. Stage 5C approved and in implementation.
 
 Audit date: June 26, 2026
 
@@ -473,3 +473,23 @@ Out of scope:
 Implementation intent:
 
 This slice should change hierarchy and copy, not the underlying memory model. The child show page should first answer: "What can I do with my child today?" Profile management should remain available but visually secondary.
+
+---
+
+## Stage 5C - Carry Today's Question Into Capture
+
+Approved scope:
+
+- Pass the child home's selected daily question into the new memory capture path.
+- Preselect that active question on the capture form when the param is valid.
+- Present the selected question as the primary prompt near the top of the form.
+- Keep the ability to choose another active question as a secondary control.
+- Preserve existing text memory, voice memory, authorization, and storage behavior.
+- Fall back to the existing selector flow when the question param is missing, invalid, or inactive.
+
+Out of scope:
+
+- AI features, personalized prompt recommendation, or question-selection algorithm changes.
+- Voice recording behavior, storage, playback, deletion, or authorization changes.
+- Gamification, streaks, scores, badges, dashboards, child labels, or clinical language.
+- Children's-book illustration or broader visual identity work.

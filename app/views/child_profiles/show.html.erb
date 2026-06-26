@@ -25,7 +25,7 @@
 
         <div class="flex flex-col gap-3 sm:flex-row">
           <%= link_to "Answer today's question",
-                new_child_profile_memory_response_path(@child_profile),
+                new_child_profile_memory_response_path(@child_profile, daily_question_id: @todays_question.id),
                 class: "btn btn-primary w-full sm:w-auto" %>
           <%= link_to "Memory archive",
                 child_profile_memory_responses_path(@child_profile),

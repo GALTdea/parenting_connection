@@ -94,6 +94,7 @@ RSpec.describe "/child_profiles", type: :request do
       expect(response.body).to include("Today's conversation")
       expect(response.body).to include("Today's question")
       expect(response.body).to include("Answer today&#39;s question")
+      expect(response.body).to include(new_child_profile_memory_response_path(child_profile, daily_question_id: daily_question.id))
       expect(response.body).to include("What made you smile today?")
       expect(response.body).to include("We read the same book twice.")
     end

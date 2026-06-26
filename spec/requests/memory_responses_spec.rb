@@ -187,6 +187,42 @@ RSpec.describe "/child_profiles/:child_profile_id/memory_responses", type: :requ
       expect(response.body).to include("Audio file")
     end
 
+    it "preselects and features the provided active daily question" do
+      other_question = create(:daily_question, prompt: "What did you wonder about today?")
+
+      get new_child_profile_memory_response_url(child_profile, daily_question_id: daily_question.id)
+
+      expect(response).to be_successful
+      expect(response.body).to include("Today's question")
+      expect(response.body).to include("What made you smile today?")
+      expect(response.body).to include("Save what #{child_profile.name} said")
+      expect(response.body).to include("Use a different question")
+      expect(response.body).to include(%(option selected="selected" value="#{daily_question.id}">What made you smile today?</option>))
+      expect(response.body).to include(%(value="#{other_question.id}">What did you wonder about today?</option>))
+    end
+
+    it "falls back to the question selector when the provided question is invalid" do
+      daily_question
+
+      get new_child_profile_memory_response_url(child_profile, daily_question_id: "missing")
+
+      expect(response).to be_successful
+      expect(response.body).not_to include("Today's question")
+      expect(response.body).to include("Choose a question")
+      expect(response.body).to include("What made you smile today?")
+    end
+
+    it "does not preselect an inactive question" do
+      daily_question
+      inactive_question = create(:daily_question, active: false, prompt: "What felt quiet today?")
+
+      get new_child_profile_memory_response_url(child_profile, daily_question_id: inactive_question.id)
+
+      expect(response).to be_successful
+      expect(response.body).not_to include("What felt quiet today?")
+      expect(response.body).to include("Choose a question")
+    end
+
     it "does not render the form for another user's child profile" do
       other_child_profile = create(:child_profile)
 

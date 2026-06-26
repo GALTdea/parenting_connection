@@ -31,7 +31,11 @@ class MemoryResponsesController < ApplicationController
   end
 
   def new
-    @memory_response = @child_profile.memory_responses.build(answered_on: Date.current)
+    @selected_daily_question = selected_daily_question_from_param
+    @memory_response = @child_profile.memory_responses.build(
+      daily_question: @selected_daily_question,
+      answered_on: Date.current
+    )
     authorize @memory_response
   end
 
@@ -43,6 +47,7 @@ class MemoryResponsesController < ApplicationController
       redirect_to @child_profile,
         notice: "Saved to #{@child_profile.name}'s memory archive. Come back tomorrow for another question."
     else
+      @selected_daily_question = selected_daily_question_from_response
       render :new, status: :unprocessable_entity
     end
   end
@@ -55,6 +60,14 @@ class MemoryResponsesController < ApplicationController
 
   def set_daily_questions
     @daily_questions = DailyQuestion.active.ordered
+  end
+
+  def selected_daily_question_from_param
+    @daily_questions.find_by(id: params[:daily_question_id])
+  end
+
+  def selected_daily_question_from_response
+    @daily_questions.find_by(id: @memory_response.daily_question_id)
   end
 
   def ordered_memory_responses
