@@ -30,7 +30,9 @@ class MemoryResponsesController < ApplicationController
   end
 
   def new
-    @selected_daily_question = selected_daily_question_from_param
+    @selected_daily_question_selection = selected_daily_question_selection_from_param
+    @selected_daily_question = @selected_daily_question_selection&.daily_question || selected_daily_question_from_param
+    @selected_presented_prompt = presented_prompt_for(@selected_daily_question_selection, @selected_daily_question)
     @daily_questions = daily_questions_for_form(@selected_daily_question)
     @memory_response = @child_profile.memory_responses.build(
       daily_question: @selected_daily_question,
@@ -41,13 +43,16 @@ class MemoryResponsesController < ApplicationController
 
   def create
     @memory_response = @child_profile.memory_responses.build(memory_response_params)
+    snapshot_prompt_from_selected_question
     authorize @memory_response
 
     if @memory_response.save
       redirect_to @child_profile,
         notice: "Saved to #{@child_profile.name}'s memory archive. Come back tomorrow for another question."
     else
+      @selected_daily_question_selection = selected_daily_question_selection_for_response
       @selected_daily_question = selected_daily_question_from_response
+      @selected_presented_prompt = presented_prompt_for(@selected_daily_question_selection, @selected_daily_question)
       @daily_questions = daily_questions_for_form(@selected_daily_question)
       render :new, status: :unprocessable_entity
     end
@@ -71,13 +76,44 @@ class MemoryResponsesController < ApplicationController
       selected_question_for_date(@memory_response.answered_on, @memory_response.daily_question_id)
   end
 
+  def selected_daily_question_selection_from_param
+    selected_daily_question_selection_by_id ||
+      selected_daily_question_selection_for_date(Date.current, params[:daily_question_id])
+  end
+
+  def selected_daily_question_selection_for_response
+    selected_daily_question_selection_by_id ||
+      selected_daily_question_selection_for_date(@memory_response.answered_on, @memory_response.daily_question_id)
+  end
+
+  def selected_daily_question_selection_by_id
+    return if params[:daily_question_selection_id].blank?
+
+    @child_profile.daily_question_selections
+      .find_by(id: params[:daily_question_selection_id])
+  end
+
   def selected_question_for_date(date, daily_question_id)
+    selected_daily_question_selection_for_date(date, daily_question_id)&.daily_question
+  end
+
+  def selected_daily_question_selection_for_date(date, daily_question_id)
     return if date.blank? || daily_question_id.blank?
 
-    selection = @child_profile.daily_question_selections
-      .includes(:daily_question)
+    @child_profile.daily_question_selections
       .find_by(selected_on: date, daily_question_id: daily_question_id)
-    selection&.daily_question
+  end
+
+  def presented_prompt_for(selection, daily_question)
+    selection&.presented_prompt.presence || daily_question&.prompt
+  end
+
+  def snapshot_prompt_from_selected_question
+    selection = selected_daily_question_selection_by_id
+    return if selection.blank?
+    return unless selection.daily_question_id == @memory_response.daily_question_id
+
+    @memory_response.prompt_snapshot = selection.presented_prompt
   end
 
   def daily_questions_for_form(selected_daily_question)

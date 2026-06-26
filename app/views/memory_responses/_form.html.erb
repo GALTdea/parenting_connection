@@ -13,10 +13,14 @@
   <% end %>
 
   <% if selected_daily_question.present? %>
+    <% if selected_daily_question_selection.present? %>
+      <%= hidden_field_tag :daily_question_selection_id, selected_daily_question_selection.id %>
+    <% end %>
+
     <section class="rounded-lg border border-base-300 bg-base-100 p-5">
       <p class="text-sm font-medium text-primary">Today's question</p>
       <h2 class="mt-2 text-2xl font-semibold leading-snug text-base-content">
-        <%= selected_daily_question.prompt %>
+        <%= selected_presented_prompt.presence || selected_daily_question.prompt %>
       </h2>
       <p class="mt-3 text-base-content/70">
         Save what <%= child_profile.name %> said, or add a note you want to remember.

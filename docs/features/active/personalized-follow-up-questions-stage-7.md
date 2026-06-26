@@ -2,7 +2,7 @@
 
 Status
 
-Stage 7A implemented. Do not implement Stage 7B, 7C, 7D, or 7E until reviewed and approved.
+Stage 7A and 7B implemented. Do not implement Stage 7C, 7D, or 7E until reviewed and approved.
 
 ---
 
@@ -648,6 +648,16 @@ Stage 7A implemented the non-AI foundation only:
 * `PersonalizedFollowUpEligibility` can determine whether a child/date has enough current-child text memory history and frequency readiness for a future follow-up.
 * Stage 7A does not generate, show, summarize, classify, score, or label personalized follow-ups.
 * Stage 7A does not use raw voice content, transcripts, or AI provider calls.
+
+Stage 7B implemented the parent-facing display shell only:
+
+* The child home daily ritual now renders `DailyQuestionSelection.presented_prompt`, with fallback to the selected curated `DailyQuestion.prompt`.
+* The "Answer today's question" path now carries the selected daily question selection into capture.
+* The capture prompt card now renders the selected/presented prompt.
+* Saving today's selected question preserves the selected presented prompt in `MemoryResponse.prompt_snapshot`.
+* The alternate curated question selector remains available and continues to save the alternate curated prompt when the parent chooses a different question.
+* Stage 7B does not generate or select personalized follow-ups.
+* Stage 7B does not add skip/dismiss controls, templates, raw voice content, transcripts, or AI provider calls.
 
 Do not implement later Stage 7 slices until reviewed and approved.
 

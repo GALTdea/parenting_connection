@@ -270,18 +270,48 @@ RSpec.describe "/child_profiles/:child_profile_id/memory_responses", type: :requ
     it "preselects a same-day selected question that was later retired" do
       create(:daily_question, prompt: "What made you smile today?")
       retired_question = create(:daily_question, prompt: "What felt cozy today?")
-      create(:daily_question_selection,
+      selection = create(:daily_question_selection,
         child_profile: child_profile,
         daily_question: retired_question,
         selected_on: Date.current)
       retired_question.update!(active: false)
 
-      get new_child_profile_memory_response_url(child_profile, daily_question_id: retired_question.id)
+      get new_child_profile_memory_response_url(child_profile, daily_question_selection_id: selection.id)
 
       expect(response).to be_successful
       expect(response.body).to include("Today's question")
       expect(response.body).to include("What felt cozy today?")
       expect(response.body).to include(%(option selected="selected" value="#{retired_question.id}">What felt cozy today?</option>))
+    end
+
+    it "features the selected presented prompt from a daily question selection" do
+      selection = create(:daily_question_selection,
+        child_profile: child_profile,
+        daily_question: daily_question,
+        selected_on: Date.current,
+        presented_prompt: "You once talked about a treehouse. What room would it need?")
+
+      get new_child_profile_memory_response_url(child_profile, daily_question_selection_id: selection.id)
+
+      expect(response).to be_successful
+      expect(response.body).to include("Today's question")
+      expect(response.body).to include("You once talked about a treehouse. What room would it need?")
+      expect(response.body).to include(%(name="daily_question_selection_id" id="daily_question_selection_id" value="#{selection.id}"))
+      expect(response.body).to include(%(option selected="selected" value="#{daily_question.id}">What made you smile today?</option>))
+    end
+
+    it "falls back to the daily question prompt when the selected presented prompt is blank" do
+      selection = create(:daily_question_selection,
+        child_profile: child_profile,
+        daily_question: daily_question,
+        selected_on: Date.current)
+      selection.update_column(:presented_prompt, "")
+
+      get new_child_profile_memory_response_url(child_profile, daily_question_selection_id: selection.id)
+
+      expect(response).to be_successful
+      expect(response.body).to include("Today's question")
+      expect(response.body).to include("What made you smile today?")
     end
 
     it "does not render the form for another user's child profile" do
@@ -372,14 +402,16 @@ RSpec.describe "/child_profiles/:child_profile_id/memory_responses", type: :requ
     it "creates a response for a same-day selected question that was later retired" do
       create(:daily_question, prompt: "What made you smile today?")
       retired_question = create(:daily_question, prompt: "What felt cozy today?")
-      create(:daily_question_selection,
+      selection = create(:daily_question_selection,
         child_profile: child_profile,
         daily_question: retired_question,
-        selected_on: Date.current)
+        selected_on: Date.current,
+        presented_prompt: "What would make the cozy corner even better?")
       retired_question.update!(active: false)
 
       expect do
         post child_profile_memory_responses_url(child_profile), params: {
+          daily_question_selection_id: selection.id,
           memory_response: {
             daily_question_id: retired_question.id,
             response_text: "We read under the blanket.",
@@ -390,6 +422,51 @@ RSpec.describe "/child_profiles/:child_profile_id/memory_responses", type: :requ
 
       expect(response).to redirect_to(child_profile_url(child_profile))
       expect(child_profile.memory_responses.last.daily_question).to eq(retired_question)
+      expect(child_profile.memory_responses.last.prompt_snapshot).to eq("What would make the cozy corner even better?")
+    end
+
+    it "preserves the selected presented prompt when saving today's question" do
+      selection = create(:daily_question_selection,
+        child_profile: child_profile,
+        daily_question: daily_question,
+        selected_on: Date.current,
+        presented_prompt: "You once talked about a treehouse. What room would it need?")
+
+      expect do
+        post child_profile_memory_responses_url(child_profile), params: {
+          daily_question_selection_id: selection.id,
+          memory_response: {
+            daily_question_id: daily_question.id,
+            response_text: "It needs a tiny library.",
+            answered_on: Date.current.to_s
+          }
+        }
+      end.to change(child_profile.memory_responses, :count).by(1)
+
+      expect(child_profile.memory_responses.last.prompt_snapshot).to eq("You once talked about a treehouse. What room would it need?")
+    end
+
+    it "uses the alternate curated question prompt when the parent chooses another question" do
+      selection = create(:daily_question_selection,
+        child_profile: child_profile,
+        daily_question: daily_question,
+        selected_on: Date.current,
+        presented_prompt: "You once talked about a treehouse. What room would it need?")
+      alternate_question = create(:daily_question, prompt: "What did you wonder about today?")
+
+      expect do
+        post child_profile_memory_responses_url(child_profile), params: {
+          daily_question_selection_id: selection.id,
+          memory_response: {
+            daily_question_id: alternate_question.id,
+            response_text: "Why the moon looked orange.",
+            answered_on: Date.current.to_s
+          }
+        }
+      end.to change(child_profile.memory_responses, :count).by(1)
+
+      expect(child_profile.memory_responses.last.daily_question).to eq(alternate_question)
+      expect(child_profile.memory_responses.last.prompt_snapshot).to eq("What did you wonder about today?")
     end
 
     it "does not create a response for another user's child profile" do

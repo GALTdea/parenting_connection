@@ -9,7 +9,11 @@ class DailyQuestionSelector
   end
 
   def question
-    existing_selection&.daily_question || create_selection&.daily_question
+    selection&.daily_question
+  end
+
+  def selection
+    existing_selection || create_selection
   end
 
   private

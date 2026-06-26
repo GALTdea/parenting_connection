@@ -94,7 +94,8 @@ RSpec.describe "/child_profiles", type: :request do
       expect(response.body).to include("Today's conversation")
       expect(response.body).to include("Today's question")
       expect(response.body).to include("Answer today&#39;s question")
-      expect(response.body).to include(new_child_profile_memory_response_path(child_profile, daily_question_id: daily_question.id))
+      selection = child_profile.daily_question_selections.find_by!(selected_on: Date.current)
+      expect(response.body).to include(new_child_profile_memory_response_path(child_profile, daily_question_selection_id: selection.id))
       expect(response.body).to include("What made you smile today?")
       expect(response.body).to include("We read the same book twice.")
     end
@@ -138,8 +139,39 @@ RSpec.describe "/child_profiles", type: :request do
       get child_profile_url(child_profile)
 
       expect(child_profile.daily_question_selections.where(selected_on: Date.current).count).to eq(1)
-      expect(response.body).to include(first_selection.daily_question.prompt)
-      expect(response.body).to include(new_child_profile_memory_response_path(child_profile, daily_question_id: first_selection.daily_question.id))
+      expect(response.body).to include(first_selection.presented_prompt)
+      expect(response.body).to include(new_child_profile_memory_response_path(child_profile, daily_question_selection_id: first_selection.id))
+    end
+
+    it "renders today's question from the selected presented prompt" do
+      child_profile = create(:child_profile, user: user)
+      daily_question = create(:daily_question, prompt: "What made you smile today?")
+      selection = create(:daily_question_selection,
+        child_profile: child_profile,
+        daily_question: daily_question,
+        selected_on: Date.current,
+        presented_prompt: "You once talked about a treehouse. What room would it need?")
+
+      get child_profile_url(child_profile)
+
+      expect(response).to be_successful
+      expect(response.body).to include("You once talked about a treehouse. What room would it need?")
+      expect(response.body).not_to include("What made you smile today?")
+      expect(response.body).to include(new_child_profile_memory_response_path(child_profile, daily_question_selection_id: selection.id))
+    end
+
+    it "falls back to the daily question prompt when the selection prompt is blank" do
+      child_profile = create(:child_profile, user: user)
+      daily_question = create(:daily_question, prompt: "What made you smile today?")
+      create(:daily_question_selection,
+        child_profile: child_profile,
+        daily_question: daily_question,
+        selected_on: Date.current).update_column(:presented_prompt, "")
+
+      get child_profile_url(child_profile)
+
+      expect(response).to be_successful
+      expect(response.body).to include("What made you smile today?")
     end
 
     it "shows a same-day selected question after it is retired" do
@@ -155,7 +187,8 @@ RSpec.describe "/child_profiles", type: :request do
 
       expect(response).to be_successful
       expect(response.body).to include("What felt cozy today?")
-      expect(response.body).to include(new_child_profile_memory_response_path(child_profile, daily_question_id: retired_question.id))
+      selection = child_profile.daily_question_selections.find_by!(selected_on: Date.current)
+      expect(response.body).to include(new_child_profile_memory_response_path(child_profile, daily_question_selection_id: selection.id))
     end
 
     it "does not render another user's child profile" do

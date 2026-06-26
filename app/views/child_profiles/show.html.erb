@@ -19,13 +19,13 @@
         <div class="rounded-lg border border-base-300 bg-base-100 p-5">
           <p class="text-sm font-medium text-base-content/60">Today's question</p>
           <h2 class="mt-2 text-2xl font-semibold leading-snug text-base-content">
-            <%= @todays_question.prompt %>
+            <%= @todays_question_selection.presented_prompt.presence || @todays_question.prompt %>
           </h2>
         </div>
 
         <div class="flex flex-col gap-3 sm:flex-row">
           <%= link_to "Answer today's question",
-                new_child_profile_memory_response_path(@child_profile, daily_question_id: @todays_question.id),
+                new_child_profile_memory_response_path(@child_profile, daily_question_selection_id: @todays_question_selection.id),
                 class: "btn btn-primary w-full sm:w-auto" %>
           <%= link_to "Memory archive",
                 child_profile_memory_responses_path(@child_profile),

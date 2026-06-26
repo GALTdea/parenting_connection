@@ -10,7 +10,8 @@ class ChildProfilesController < ApplicationController
 
   def show
     authorize @child_profile
-    @todays_question = DailyQuestionSelector.new(child_profile: @child_profile).question
+    @todays_question_selection = DailyQuestionSelector.new(child_profile: @child_profile).selection
+    @todays_question = @todays_question_selection&.daily_question
     @memory_responses = @child_profile
       .memory_responses
       .with_attached_voice_recording
