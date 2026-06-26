@@ -127,6 +127,37 @@ RSpec.describe "/child_profiles", type: :request do
       expect(response.body).to include("Answer today's question and save the words you want to remember.")
     end
 
+    it "keeps today's question stable for the child" do
+      child_profile = create(:child_profile, user: user)
+      create(:daily_question, prompt: "What made you smile today?")
+      create(:daily_question, prompt: "What felt cozy today?")
+
+      get child_profile_url(child_profile)
+      first_selection = child_profile.daily_question_selections.find_by!(selected_on: Date.current)
+
+      get child_profile_url(child_profile)
+
+      expect(child_profile.daily_question_selections.where(selected_on: Date.current).count).to eq(1)
+      expect(response.body).to include(first_selection.daily_question.prompt)
+      expect(response.body).to include(new_child_profile_memory_response_path(child_profile, daily_question_id: first_selection.daily_question.id))
+    end
+
+    it "shows a same-day selected question after it is retired" do
+      child_profile = create(:child_profile, user: user)
+      retired_question = create(:daily_question, prompt: "What felt cozy today?")
+      create(:daily_question_selection,
+        child_profile: child_profile,
+        daily_question: retired_question,
+        selected_on: Date.current)
+      retired_question.update!(active: false)
+
+      get child_profile_url(child_profile)
+
+      expect(response).to be_successful
+      expect(response.body).to include("What felt cozy today?")
+      expect(response.body).to include(new_child_profile_memory_response_path(child_profile, daily_question_id: retired_question.id))
+    end
+
     it "does not render another user's child profile" do
       child_profile = create(:child_profile)
 

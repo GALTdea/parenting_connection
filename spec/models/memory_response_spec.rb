@@ -49,6 +49,23 @@ RSpec.describe MemoryResponse, type: :model do
       expect(memory_response.errors[:daily_question]).to include("must be active")
     end
 
+    it 'allows a retired question when it was selected for that child and date' do
+      child_profile = create(:child_profile)
+      daily_question = create(:daily_question)
+      create(:daily_question_selection,
+        child_profile: child_profile,
+        daily_question: daily_question,
+        selected_on: Date.new(2026, 6, 26))
+      daily_question.update!(active: false)
+
+      memory_response = build(:memory_response,
+        child_profile: child_profile,
+        daily_question: daily_question,
+        answered_on: Date.new(2026, 6, 26))
+
+      expect(memory_response).to be_valid
+    end
+
     it 'rejects non-audio voice recording attachments' do
       memory_response = build(:memory_response)
       memory_response.voice_recording.attach(

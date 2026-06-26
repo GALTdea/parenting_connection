@@ -10,7 +10,7 @@ class ChildProfilesController < ApplicationController
 
   def show
     authorize @child_profile
-    @todays_question = DailyQuestion.active.ordered.first
+    @todays_question = DailyQuestionSelector.new(child_profile: @child_profile).question
     @memory_responses = @child_profile
       .memory_responses
       .includes(:daily_question)

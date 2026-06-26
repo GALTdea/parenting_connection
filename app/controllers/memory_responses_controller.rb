@@ -2,7 +2,6 @@
 
 class MemoryResponsesController < ApplicationController
   before_action :set_child_profile
-  before_action :set_daily_questions, only: %i[new create]
 
   def index
     authorize @child_profile, :show?
@@ -32,6 +31,7 @@ class MemoryResponsesController < ApplicationController
 
   def new
     @selected_daily_question = selected_daily_question_from_param
+    @daily_questions = daily_questions_for_form(@selected_daily_question)
     @memory_response = @child_profile.memory_responses.build(
       daily_question: @selected_daily_question,
       answered_on: Date.current
@@ -48,6 +48,7 @@ class MemoryResponsesController < ApplicationController
         notice: "Saved to #{@child_profile.name}'s memory archive. Come back tomorrow for another question."
     else
       @selected_daily_question = selected_daily_question_from_response
+      @daily_questions = daily_questions_for_form(@selected_daily_question)
       render :new, status: :unprocessable_entity
     end
   end
@@ -58,16 +59,36 @@ class MemoryResponsesController < ApplicationController
     @child_profile = policy_scope(ChildProfile).find(params.expect(:child_profile_id))
   end
 
-  def set_daily_questions
-    @daily_questions = DailyQuestion.active.ordered
-  end
-
   def selected_daily_question_from_param
-    @daily_questions.find_by(id: params[:daily_question_id])
+    return if params[:daily_question_id].blank?
+
+    active_daily_questions.find_by(id: params[:daily_question_id]) ||
+      selected_question_for_date(Date.current, params[:daily_question_id])
   end
 
   def selected_daily_question_from_response
-    @daily_questions.find_by(id: @memory_response.daily_question_id)
+    active_daily_questions.find_by(id: @memory_response.daily_question_id) ||
+      selected_question_for_date(@memory_response.answered_on, @memory_response.daily_question_id)
+  end
+
+  def selected_question_for_date(date, daily_question_id)
+    return if date.blank? || daily_question_id.blank?
+
+    selection = @child_profile.daily_question_selections
+      .includes(:daily_question)
+      .find_by(selected_on: date, daily_question_id: daily_question_id)
+    selection&.daily_question
+  end
+
+  def daily_questions_for_form(selected_daily_question)
+    questions = active_daily_questions.ordered.to_a
+    return questions if selected_daily_question.blank? || questions.include?(selected_daily_question)
+
+    [ selected_daily_question, *questions ]
+  end
+
+  def active_daily_questions
+    DailyQuestion.active
   end
 
   def ordered_memory_responses

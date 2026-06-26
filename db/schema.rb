@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_26_003100) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_26_010100) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -59,14 +59,34 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_26_003100) do
     t.index ["user_id"], name: "index_child_profiles_on_user_id"
   end
 
+  create_table "daily_question_selections", force: :cascade do |t|
+    t.bigint "child_profile_id", null: false
+    t.datetime "created_at", null: false
+    t.bigint "daily_question_id", null: false
+    t.date "selected_on", null: false
+    t.datetime "updated_at", null: false
+    t.index ["child_profile_id", "daily_question_id", "selected_on"], name: "index_daily_question_selections_on_child_question_and_date"
+    t.index ["child_profile_id", "selected_on"], name: "index_daily_question_selections_on_child_and_selected_on", unique: true
+    t.index ["child_profile_id"], name: "index_daily_question_selections_on_child_profile_id"
+    t.index ["daily_question_id"], name: "index_daily_question_selections_on_daily_question_id"
+  end
+
   create_table "daily_questions", force: :cascade do |t|
     t.boolean "active", default: true, null: false
+    t.text "age_guidance"
+    t.string "category", null: false
     t.datetime "created_at", null: false
+    t.text "internal_notes"
+    t.integer "max_age_years"
+    t.integer "min_age_years"
     t.integer "position"
     t.text "prompt", null: false
+    t.string "slug", null: false
+    t.string "tags", default: [], null: false, array: true
     t.datetime "updated_at", null: false
     t.index ["active", "position"], name: "index_daily_questions_on_active_and_position"
     t.index ["prompt"], name: "index_daily_questions_on_prompt", unique: true
+    t.index ["slug"], name: "index_daily_questions_on_slug", unique: true
   end
 
   create_table "friendly_id_slugs", force: :cascade do |t|
@@ -171,6 +191,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_26_003100) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "child_profiles", "users"
+  add_foreign_key "daily_question_selections", "child_profiles"
+  add_foreign_key "daily_question_selections", "daily_questions"
   add_foreign_key "memory_responses", "child_profiles"
   add_foreign_key "memory_responses", "daily_questions"
   add_foreign_key "roles", "spaces"

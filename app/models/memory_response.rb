@@ -34,8 +34,18 @@ class MemoryResponse < ApplicationRecord
 
   def daily_question_must_be_active
     return if daily_question.blank? || daily_question.active?
+    return if selected_daily_question_for_answered_date?
 
     errors.add(:daily_question, "must be active")
+  end
+
+  def selected_daily_question_for_answered_date?
+    return false if child_profile.blank? || answered_on.blank?
+
+    child_profile.daily_question_selections.exists?(
+      daily_question_id: daily_question_id,
+      selected_on: answered_on
+    )
   end
 
   def voice_recording_must_be_audio

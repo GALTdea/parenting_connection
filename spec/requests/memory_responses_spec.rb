@@ -223,6 +223,23 @@ RSpec.describe "/child_profiles/:child_profile_id/memory_responses", type: :requ
       expect(response.body).to include("Choose a question")
     end
 
+    it "preselects a same-day selected question that was later retired" do
+      create(:daily_question, prompt: "What made you smile today?")
+      retired_question = create(:daily_question, prompt: "What felt cozy today?")
+      create(:daily_question_selection,
+        child_profile: child_profile,
+        daily_question: retired_question,
+        selected_on: Date.current)
+      retired_question.update!(active: false)
+
+      get new_child_profile_memory_response_url(child_profile, daily_question_id: retired_question.id)
+
+      expect(response).to be_successful
+      expect(response.body).to include("Today's question")
+      expect(response.body).to include("What felt cozy today?")
+      expect(response.body).to include(%(option selected="selected" value="#{retired_question.id}">What felt cozy today?</option>))
+    end
+
     it "does not render the form for another user's child profile" do
       other_child_profile = create(:child_profile)
 
@@ -305,6 +322,29 @@ RSpec.describe "/child_profiles/:child_profile_id/memory_responses", type: :requ
 
       expect(response).to have_http_status(:unprocessable_content)
       expect(response.body).to include("Voice recording must be an audio file")
+    end
+
+    it "creates a response for a same-day selected question that was later retired" do
+      create(:daily_question, prompt: "What made you smile today?")
+      retired_question = create(:daily_question, prompt: "What felt cozy today?")
+      create(:daily_question_selection,
+        child_profile: child_profile,
+        daily_question: retired_question,
+        selected_on: Date.current)
+      retired_question.update!(active: false)
+
+      expect do
+        post child_profile_memory_responses_url(child_profile), params: {
+          memory_response: {
+            daily_question_id: retired_question.id,
+            response_text: "We read under the blanket.",
+            answered_on: Date.current.to_s
+          }
+        }
+      end.to change(child_profile.memory_responses, :count).by(1)
+
+      expect(response).to redirect_to(child_profile_url(child_profile))
+      expect(child_profile.memory_responses.last.daily_question).to eq(retired_question)
     end
 
     it "does not create a response for another user's child profile" do
