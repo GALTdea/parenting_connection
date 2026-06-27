@@ -2,7 +2,7 @@
 
 Status
 
-Product architecture note. This document captures durable product direction for future conversation intelligence work. It does not authorize implementation by itself.
+Approved product architecture note. This document captures durable product direction for future conversation intelligence work. It does not authorize implementation by itself.
 
 ---
 
@@ -244,14 +244,16 @@ Avoid:
 * "Describe your child's personality."
 * "What are your child's challenges?"
 
-Suggested optional inputs:
+Approved first-session data scope:
 
-* Child nickname/name.
-* Age or birthday.
+Only collect optional conversation preferences:
+
 * Recent interests.
-* Preferred first-question style.
+* Preferred first-question style or tone.
 * Preferred depth.
-* Optional topic parent would love to hear more about.
+* What the parent hopes to hear more about.
+
+Do not collect personality traits, challenges, diagnoses, concerns, needs, or parent-authored summaries of who the child is.
 
 Example prompt:
 
@@ -324,7 +326,7 @@ Possible names:
 * What We're Learning.
 * Memory Map.
 
-Recommended product concept:
+Approved product concept for now:
 
 Living Portrait
 
@@ -354,20 +356,30 @@ The Memory Layer preserves what the parent captured. It is the canonical record.
 
 ### Conversation Signal Layer
 
-Lightweight signals that help the system understand conversations without labeling the child:
+Lightweight signals that help the system understand conversations without labeling the child.
+
+Approved pre-AI signal storage for the current question-quality direction:
 
 * Prompt category.
-* Age band.
 * Question depth.
-* Parent chose another.
+* Age band.
+* Source type.
+* Chosen question.
+* Answered question.
+* Changed question.
 * Memory saved.
 * Voice included.
+
+Future signals may include:
+
 * Optional parent debrief.
 * Response length/presence.
 * Open loops.
 * Question types that seem to lead to richer conversations.
 
 Signals should be operational and humble. They should help the product choose better questions and support continuity, not create hidden judgments about the child or parent.
+
+Stage 8 metadata should be designed so parent debrief can plug in later, but parent debrief itself is post-MVP and should not be implemented during the current question-quality stage.
 
 ### Living Understanding Layer
 
@@ -416,11 +428,13 @@ Future optional layer:
 
 This layer should help the parent notice and try small relational moves. It should not grade parenting, assess the child, or replace the parent's judgment.
 
+Parent coaching is post-MVP. Keep it in the architecture, but do not implement it during the current question-quality stage.
+
 ---
 
 ## Parent Debrief And Coaching Direction
 
-Future concept:
+Future post-MVP concept:
 
 After saving a memory, the parent may optionally answer:
 
@@ -463,6 +477,8 @@ Preferred framing:
 
 The debrief should remain optional. A parent should be able to save a memory and leave without completing another task.
 
+Parent debrief should not be implemented during the current question-quality stage. Stage 8 metadata should leave room for it to plug in later.
+
 ---
 
 ## AI Role
@@ -493,6 +509,8 @@ AI should not:
 * Speak directly to the child.
 * Replace the parent's attention.
 
+AI-generated questions should not be shown automatically for now. Future AI should generate candidates or drafts within strict constraints. A later feature brief must define review, validation, persistence, fallback, and parent-control rules before AI-generated questions enter the parent experience.
+
 Recommended pattern:
 
 1. The app determines constraints.
@@ -502,6 +520,14 @@ Recommended pattern:
 5. Fallback always exists.
 
 AI output should be draft-like, reviewable, and bounded to specific product flows. The original memory, parent notes, and parent choices remain more authoritative than generated synthesis.
+
+Transcript eligibility:
+
+Voice recordings and transcripts must not be used for conversation intelligence until transcripts are parent-visible, parent-reviewed, and explicitly allowed for this feature.
+
+Deletion/export:
+
+Derived understanding must be treated as child-related data. If source memories are deleted, derived insights connected to them should be revisited, invalidated, or regenerated. Future feature briefs must define how deletion and export apply to the Living Portrait, AI drafts, summaries, and other derived understanding.
 
 ---
 
@@ -604,19 +630,30 @@ If a future brief introduces a durable AI provider behavior, generated prompt st
 
 ---
 
-## Open Questions
+## Approved Decisions
+
+Approved product decisions:
+
+* Use Living Portrait as the product concept name for now.
+* First Question Setup collects only optional conversation preferences, recent interests, preferred tone/depth, and what the parent hopes to hear more about.
+* First Question Setup must not collect personality traits, challenges, diagnoses, concerns, needs, or parent-authored summaries of who the child is.
+* Parent debrief is post-MVP, but Stage 8 metadata should be designed so debrief can plug in later.
+* Store only simple product signals before AI exists: prompt category, depth, age band, source type, chosen/answered/changed question, memory saved, and voice included.
+* AI-generated questions should not be shown automatically for now.
+* Future AI should generate candidates or drafts within strict constraints.
+* Derived understanding is child-related data.
+* If source memories are deleted, derived insights connected to them should be revisited, invalidated, or regenerated.
+* Transcripts must not be used for conversation intelligence until they are parent-visible, parent-reviewed, and explicitly allowed for this feature.
+* Parent coaching is post-MVP and should not be implemented during the current question-quality stage.
+
+## Remaining Open Questions
 
 Unresolved product decisions:
 
-* What should the Living Portrait be called?
-* How much first-session data should be collected?
-* Should parent debrief happen immediately after save or later?
-* What signals should be stored before AI exists?
-* When should AI-generated questions be allowed into the parent experience?
-* Should AI-generated questions require human/admin review first?
 * How should parents edit or correct the Living Portrait?
-* How should deletion/export apply to derived understanding?
-* How should voice recordings and transcripts become eligible for understanding later?
-* Should coaching be post-MVP only?
+* What exact review path is required before AI-generated question candidates can enter the parent experience?
+* Should AI-generated question candidates require human/admin review first, parent review at point of use, or both?
+* What exact deletion/export behavior should apply to each kind of derived understanding?
+* How should source-memory deletion trigger invalidation or regeneration of connected derived insights?
 
 These questions require product approval before the corresponding feature briefs move into implementation.
