@@ -27,6 +27,28 @@ class DailyQuestionSelector
   end
 
   def create_selection
+    create_follow_up_selection || create_curated_selection
+  end
+
+  def create_follow_up_selection
+    follow_up = CuratedFollowUpTemplateSelector.new(child_profile: child_profile, date: date).result
+    return if follow_up.blank?
+
+    DailyQuestionSelection.create!(
+      child_profile: child_profile,
+      daily_question: follow_up.daily_question,
+      selected_on: date,
+      source_type: "personalized_follow_up",
+      presented_prompt: follow_up.presented_prompt,
+      source_memory_response: follow_up.source_memory_response
+    )
+  rescue ActiveRecord::RecordNotUnique
+    child_profile.daily_question_selections.find_by(selected_on: date)
+  rescue ActiveRecord::RecordInvalid
+    nil
+  end
+
+  def create_curated_selection
     selected_question = question_for_new_selection
     return if selected_question.blank?
 

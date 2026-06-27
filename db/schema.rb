@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_26_020000) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_26_030000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -65,6 +65,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_26_020000) do
     t.bigint "daily_question_id", null: false
     t.text "presented_prompt", null: false
     t.date "selected_on", null: false
+    t.bigint "source_memory_response_id"
     t.string "source_type", default: "curated", null: false
     t.datetime "updated_at", null: false
     t.index ["child_profile_id", "daily_question_id", "selected_on"], name: "index_daily_question_selections_on_child_question_and_date"
@@ -72,6 +73,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_26_020000) do
     t.index ["child_profile_id", "source_type", "selected_on"], name: "index_daily_question_selections_on_child_source_and_date"
     t.index ["child_profile_id"], name: "index_daily_question_selections_on_child_profile_id"
     t.index ["daily_question_id"], name: "index_daily_question_selections_on_daily_question_id"
+    t.index ["source_memory_response_id"], name: "index_daily_question_selections_on_source_memory_response_id"
   end
 
   create_table "daily_questions", force: :cascade do |t|
@@ -197,6 +199,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_26_020000) do
   add_foreign_key "child_profiles", "users"
   add_foreign_key "daily_question_selections", "child_profiles"
   add_foreign_key "daily_question_selections", "daily_questions"
+  add_foreign_key "daily_question_selections", "memory_responses", column: "source_memory_response_id"
   add_foreign_key "memory_responses", "child_profiles"
   add_foreign_key "memory_responses", "daily_questions"
   add_foreign_key "roles", "spaces"

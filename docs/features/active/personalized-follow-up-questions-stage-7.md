@@ -2,7 +2,7 @@
 
 Status
 
-Stage 7A and 7B implemented. Do not implement Stage 7C, 7D, or 7E until reviewed and approved.
+Stage 7A, 7B, and 7C implemented. Do not implement Stage 7D or 7E until reviewed and approved.
 
 ---
 
@@ -583,6 +583,268 @@ Documentation-only verification before implementation:
 
 ---
 
+Stage 7C Implementation Plan - Curated Template Follow-Ups
+
+Status:
+
+Implemented.
+
+Purpose:
+
+Stage 7C should create the first parent-facing personalized follow-up behavior without AI. The goal is to occasionally show a warm, curated follow-up that feels connected to something previously saved, while avoiding freeform generation, full-archive analysis, child profiling, clinical interpretation, and voice/transcript use.
+
+The smallest safe version should use the existing daily ritual:
+
+child home -> selected question/presented prompt -> capture -> save memory with prompt snapshot
+
+Stage 7C should not create a new prompt browsing surface, dashboard, notification, analysis view, or child-facing AI experience.
+
+### Template Strategy
+
+Recommended MVP approach:
+
+Use curated follow-up templates keyed to the source memory's original `DailyQuestion.category`, with optional use of safe prompt tags. Do not parse or reference parent-entered memory text in the first Stage 7C slice.
+
+Why:
+
+* `DailyQuestion.category` and tags are curated prompt metadata, not inferred child traits.
+* The app can feel gently continuous by following up on the type of prior question without needing to inspect private response text.
+* Avoiding memory-text interpolation prevents accidental sensitive references, misread context, and surveillance-feeling copy.
+* It keeps the implementation deterministic, testable, and Rails-simple.
+
+Do:
+
+* Choose a source memory from the current child only.
+* Use the source memory's `daily_question.category` to choose a curated template.
+* Render a fully curated follow-up question from that template.
+* Optionally include the prior prompt's broad topic only when the template is explicitly safe and generic.
+
+Do not:
+
+* Extract nouns, interests, emotions, or events from `MemoryResponse.response_text`.
+* Generate custom wording from memory text.
+* Reference the child by a behavior, emotion, trait, or label.
+* Use phrases like "I noticed" or "you always."
+* Use voice recordings or transcripts.
+
+Preferred first template style:
+
+* Category-based and non-specific, such as "Last time we talked about something you imagined. What would you add to that idea today?"
+* Safe even if the saved response was sensitive, because it does not quote or interpret the response.
+* Short enough to ask aloud.
+
+Defer memory-text references until a later slice with explicit sensitive-context filtering and parent controls.
+
+### Data Model
+
+Stage 7A fields are enough for the smallest Stage 7C implementation, except one additional field is now justified:
+
+* Add `source_memory_response_id` to `DailyQuestionSelection`.
+
+Reason:
+
+* Stage 7C needs to prove the selected follow-up came from a current-child source memory.
+* Repeat avoidance should avoid reusing the same source memory.
+* Tests should verify no cross-child source memory can be attached.
+* This reference is auditability and safety metadata, not a child profile or interest graph.
+
+Keep:
+
+* `DailyQuestionSelection.source_type`
+* `DailyQuestionSelection.presented_prompt`
+* `MemoryResponse.prompt_snapshot`
+* Required `daily_question_id` as the curated anchor for now.
+
+Set:
+
+* `source_type: personalized_follow_up` for a template follow-up.
+* `presented_prompt` to the exact curated template question.
+* `source_memory_response_id` to the current-child memory that made the follow-up eligible.
+* `daily_question_id` to a curated fallback/anchor question. Prefer the source memory's `daily_question_id` for the first slice unless implementation discovery shows this makes alternate selection or validation awkward.
+
+Do not add yet:
+
+* `parent_explanation` - defer until there is evidence parents need an explanation. Avoid increasing the feeling of analysis in the first slice.
+* `personalization_status` - defer until skip/dismiss controls exist.
+* `source_daily_question_id` - redundant while `daily_question_id` remains the curated anchor.
+* `FollowUpQuestionSuggestion` - unnecessary until the app creates multiple candidates, drafts, discard history, or an explicit review queue.
+
+Do not:
+
+* Create generated `DailyQuestion` records.
+* Store template follow-ups in the curated `DailyQuestion` library as one-off prompts.
+* Build child interest profiles, theme tables, scores, or labels.
+
+### Selection Behavior
+
+Default behavior remains curated Stage 6 selection.
+
+Stage 7C should only attempt a template follow-up when all of these are true:
+
+* No `DailyQuestionSelection` already exists for the child/date.
+* `PersonalizedFollowUpEligibility` returns eligible.
+* There is at least one current-child source memory with text response in the 90-day lookback.
+* The source memory has a curated `DailyQuestion` category with at least one safe follow-up template.
+* The source memory has not already been used for a previous follow-up.
+* The child has not received a personalized source type in the frequency window.
+
+Source memory choice:
+
+* Use current child only through `child_profile.memory_responses`.
+* Use saved text memories only.
+* Ignore voice-only memories.
+* Use the same 90-day lookback as Stage 7A.
+* Prefer a recent eligible memory that has not been used as a source.
+* Do not read `response_text` for content, beyond presence.
+* Do not choose memories tied to categories that have no safe template.
+
+Template choice:
+
+* Map `DailyQuestion.category` to a small hardcoded curated template list.
+* Choose deterministically from safe templates using child/date/source id, so refreshes do not churn before persistence.
+* Once selected, persist the exact template output in `DailyQuestionSelection.presented_prompt`.
+
+Frequency:
+
+* Use Stage 7A's frequency limit: at most one personalized source type per child every 7 days.
+* Keep the broader "no more than 20 percent" target as a later tuning rule; the first slice can rely on the 7-day limit plus minimum memory threshold.
+
+Repeat avoidance:
+
+* Do not reuse `source_memory_response_id`.
+* Do not repeat the same `presented_prompt` for the same child inside the 90-day lookback when alternatives exist.
+* If repeat avoidance leaves no safe template source, fall back to curated Stage 6 prompts.
+
+Fallback:
+
+* Any ineligible, missing-template, validation, source mismatch, or persistence issue falls back to normal curated selection.
+* The parent should never see an error because a follow-up could not be selected.
+* Capture should continue to receive the selected `DailyQuestionSelection` and preserve `presented_prompt` as Stage 7B already supports.
+
+Daily selection stability:
+
+* Existing same-day `DailyQuestionSelection` always wins.
+* If Stage 7C creates a template follow-up selection, refreshes show the same `presented_prompt`.
+* The selector must not replace an existing curated selection with a follow-up later the same day.
+
+### Parent Controls
+
+For the first Stage 7C slice, "Choose another question" is enough.
+
+Reason:
+
+* Stage 7B already keeps the alternate curated question selector in capture.
+* Adding skip/dismiss requires new state (`personalization_status`) and UI decisions that are not necessary to prove a rare template follow-up.
+* A separate skip control would be more important once explanations, settings, or repeated follow-ups exist.
+
+Do not add now:
+
+* Skip this follow-up.
+* Dismiss personalized follow-ups.
+* Disable personalization.
+* Regenerate.
+* Multiple follow-up candidates.
+
+Parent-facing explanation:
+
+Defer `parent_explanation` in Stage 7C. The template itself should feel natural enough without explaining the selection. If later usability feedback shows parents are confused, add a small explanation in a separate slice.
+
+No child-facing label should say "personalized," "AI," "analysis," "theme," or "detected."
+
+### Copy And Tone
+
+Use short, warm, askable questions. They should sound like a parent can naturally say them.
+
+Safe template examples by category:
+
+* `imagination`: "Last time we talked about something you imagined. What would you add to that idea today?"
+* `daily_life`: "Thinking back to one of your recent days, what small moment do you still remember?"
+* `relationships`: "Last time we talked about people in your world. What is something kind someone did recently?"
+* `growth`: "Last time we talked about trying or learning. What is something you want to try again?"
+* `memory`: "Thinking about a memory you saved before, what detail would you want to remember next?"
+* `feelings`: "Last time we talked about feelings. What helped today feel easier or brighter?"
+
+Tone rules:
+
+* Prefer "last time we talked about..." or "thinking back..."
+* Keep the subject broad and gentle.
+* Avoid saying the app noticed anything.
+* Avoid "you always," "you seem," "this means," "your anxiety," "your behavior," "pattern," "detected," "trait," or "profile."
+* Do not imply a child should remember, explain, or resolve something.
+* Do not turn the question into advice for the parent.
+
+If a category feels too risky for a safe generic follow-up, omit it from Stage 7C and fall back to curated prompts.
+
+### Tests For Stage 7C
+
+Automated:
+
+* Eligible child can receive a template follow-up selection.
+* Ineligible child receives a normal curated prompt.
+* Existing same-day selection remains stable and is not replaced.
+* Follow-up source memory belongs to the current child.
+* Other child memories are never selected as source memories.
+* Source memory must be within the 90-day lookback.
+* Voice-only memories are ignored.
+* Source memory must have a category with a safe template.
+* Frequency limit prevents another follow-up inside 7 days.
+* Repeat avoidance prevents reusing the same source memory.
+* Repeat avoidance falls back to curated prompts when no safe unused source remains.
+* `DailyQuestionSelection.source_type` is `personalized_follow_up` for template follow-ups.
+* `DailyQuestionSelection.presented_prompt` stores the exact curated template follow-up text.
+* `DailyQuestionSelection.source_memory_response_id` stores the current-child source memory.
+* Invalid cross-child source references are rejected.
+* Child home renders the persisted follow-up `presented_prompt`.
+* Capture renders the same persisted follow-up `presented_prompt`.
+* Saving the memory stores the exact follow-up in `MemoryResponse.prompt_snapshot`.
+* Choosing another curated question saves the alternate curated prompt, not the follow-up.
+* No AI/provider class is invoked or required.
+
+Manual:
+
+* Child with fewer than 3 text memories sees normal curated prompt.
+* Child with enough eligible text memories may see a template follow-up.
+* Refreshing the child home keeps the same follow-up for that day.
+* Capture shows the same question as child home.
+* Choosing another question remains available and understandable.
+* Mobile layout remains focused and touch-friendly.
+* Copy does not mention AI, analysis, labels, scores, themes, or diagnosis.
+
+### Recommended Smallest Implementation Slice
+
+Implement Stage 7C as one narrow Rails-first slice:
+
+1. Add `source_memory_response_id` to `DailyQuestionSelection` with an optional self-contained validation that the source memory belongs to the same child.
+2. Add a small service, such as `CuratedFollowUpTemplateSelector`, that:
+   * accepts `child_profile` and `date`;
+   * calls `PersonalizedFollowUpEligibility`;
+   * finds one current-child eligible source memory;
+   * maps the source memory's `daily_question.category` to a curated template;
+   * returns a proposed `presented_prompt`, `source_memory_response`, and anchor `daily_question`;
+   * never reads memory text except checking presence.
+3. Update `DailyQuestionSelector#create_selection` so it tries the curated template selector before normal curated prompt selection only when there is no existing selection.
+4. If the template selector returns nothing or persistence fails, continue with the existing Stage 6 curated prompt selection.
+5. Preserve Stage 7B display/capture behavior without adding new controls.
+6. Add focused model, service, selector, and request specs.
+
+Explicitly do not implement in Stage 7C:
+
+* AI calls.
+* Freeform generated prompts.
+* Memory text extraction or interpolation.
+* Template admin UI.
+* Parent explanation.
+* Skip/dismiss controls.
+* Settings.
+* Voice transcript use.
+* Summaries, dashboards, scores, labels, streaks, badges, or clinical language.
+
+Challenge note:
+
+The smallest useful Stage 7C is not "a personalized question about what the child said." It is a curated category follow-up inspired by a prior saved conversation. That is less magical, but much safer. It tests whether occasional continuity feels valuable while keeping the app out of analysis, profiling, and AI behavior.
+
+---
+
 Recommended Implementation Slices
 
 Slice 7A - Non-AI Eligibility And Selection Shell
@@ -658,6 +920,19 @@ Stage 7B implemented the parent-facing display shell only:
 * The alternate curated question selector remains available and continues to save the alternate curated prompt when the parent chooses a different question.
 * Stage 7B does not generate or select personalized follow-ups.
 * Stage 7B does not add skip/dismiss controls, templates, raw voice content, transcripts, or AI provider calls.
+
+Stage 7C implemented curated template follow-ups only:
+
+* `DailyQuestionSelection` now optionally references `source_memory_response_id`.
+* Source memories must belong to the same child profile as the selection.
+* `CuratedFollowUpTemplateSelector` can choose a current-child text memory in the 90-day lookback and map its `DailyQuestion.category` to a fixed curated template.
+* Template follow-ups use `source_type: personalized_follow_up`.
+* Template follow-ups store the exact curated question in `DailyQuestionSelection.presented_prompt`.
+* Template follow-ups store the source memory reference for repeat avoidance and auditability.
+* `DailyQuestionSelector` tries a curated template follow-up only when no same-day selection exists, then falls back to normal Stage 6 curated prompt selection.
+* Stage 7C ignores voice-only memories and does not use transcripts.
+* Stage 7C does not parse, extract, interpolate, summarize, classify, score, or label memory text.
+* Stage 7C does not add AI calls, generated prompts, parent explanations, skip/dismiss controls, settings, template admin UI, dashboards, streaks, badges, or clinical language.
 
 Do not implement later Stage 7 slices until reviewed and approved.
 

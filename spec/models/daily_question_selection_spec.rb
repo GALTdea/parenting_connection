@@ -33,6 +33,27 @@ RSpec.describe DailyQuestionSelection, type: :model do
       expect(selection.errors[:source_type]).to include("is not included in the list")
     end
 
+    it 'allows a source memory from the same child profile' do
+      child_profile = create(:child_profile)
+      source_memory = create(:memory_response, child_profile: child_profile)
+      selection = build(:daily_question_selection,
+        child_profile: child_profile,
+        source_memory_response: source_memory)
+
+      expect(selection).to be_valid
+    end
+
+    it 'rejects a source memory from another child profile' do
+      child_profile = create(:child_profile)
+      source_memory = create(:memory_response)
+      selection = build(:daily_question_selection,
+        child_profile: child_profile,
+        source_memory_response: source_memory)
+
+      expect(selection).not_to be_valid
+      expect(selection.errors[:source_memory_response]).to include("must belong to the selected child profile")
+    end
+
     it 'requires one selection per child and date' do
       child_profile = create(:child_profile)
       create(:daily_question_selection, child_profile: child_profile, selected_on: Date.new(2026, 6, 26))

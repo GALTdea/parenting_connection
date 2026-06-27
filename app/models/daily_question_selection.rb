@@ -9,6 +9,7 @@ class DailyQuestionSelection < ApplicationRecord
 
   belongs_to :child_profile
   belongs_to :daily_question
+  belongs_to :source_memory_response, class_name: "MemoryResponse", optional: true
 
   before_validation :default_source_type
   before_validation :snapshot_presented_prompt
@@ -18,6 +19,7 @@ class DailyQuestionSelection < ApplicationRecord
   validates :presented_prompt, presence: true
   validates :child_profile_id, uniqueness: { scope: :selected_on }
   validate :daily_question_must_be_active, on: :create
+  validate :source_memory_response_must_belong_to_child_profile
 
   private
 
@@ -36,5 +38,12 @@ class DailyQuestionSelection < ApplicationRecord
     return if daily_question.blank? || daily_question.active?
 
     errors.add(:daily_question, "must be active")
+  end
+
+  def source_memory_response_must_belong_to_child_profile
+    return if source_memory_response.blank? || child_profile.blank?
+    return if source_memory_response.child_profile_id == child_profile_id
+
+    errors.add(:source_memory_response, "must belong to the selected child profile")
   end
 end
