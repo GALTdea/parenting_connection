@@ -1,8 +1,16 @@
-# Question Quality Engine & AI Prompt Craft - Stage 8
+# Question Quality Foundation - Stage 8
 
 Status
 
 Draft. Do not implement until reviewed and approved.
+
+---
+
+Parent Document
+
+This brief is governed by `docs/product/conversation-intelligence-architecture.md`.
+
+Stage 8 implements the first editorial foundation of the future Question Engine. It does not implement Living Portrait, Parent Reflection Coach, AI generation, AI summaries, parent debrief, or any derived understanding layer.
 
 ---
 
@@ -78,7 +86,7 @@ Risk Tier
 
 Use the High-Risk Path.
 
-Stage 8 defines future AI behavior, child prompt selection, possible AI-generated content, and context boundaries for child data. Even if the first implementation slice is metadata-only and non-AI, the feature brief must apply the AI behavior and child-data privacy constraints in `docs/features/_constraints.md` and `docs/architecture/ai-architecture.md`.
+Stage 8 defines the first editorial foundation for future question quality, child prompt selection, possible AI-generated content, and context boundaries for child data. Even though Stage 8A is metadata-only and non-AI, the feature brief must apply the AI behavior and child-data privacy constraints in `docs/features/_constraints.md`, `docs/architecture/ai-architecture.md`, and `docs/product/conversation-intelligence-architecture.md`.
 
 Release constraints:
 
@@ -86,6 +94,7 @@ Release constraints:
 * AI-generated questions must not become autonomous child-facing output.
 * Prompt quality must not become scoring, diagnosis, therapy, schoolwork, or child profiling.
 * The core ritual must remain useful when AI is unavailable.
+* Stage 8A must remain non-AI: no AI calls, no AI-generated prompts, no AI summaries, no Living Portrait implementation, and no Parent Reflection Coach implementation.
 
 ---
 
@@ -95,7 +104,7 @@ In Scope
 * Define question design principles and anti-patterns.
 * Define broad age-aware prompt strategy.
 * Define prompt categories and conversation goals.
-* Define variety, rotation, intensity balance, and repeat-avoidance expectations.
+* Define question families, depth rhythm, variety, rotation, and repeat-avoidance expectations.
 * Define the future AI role in prompt quality without implementing AI calls.
 * Define an internal question quality rubric.
 * Define AI prompt architecture for future question generation, adaptation, and evaluation.
@@ -132,6 +141,9 @@ Out Of Scope
 * Fully autonomous AI prompt generation without review.
 * Parent-facing question scores.
 * Child labels, rankings, or inferred traits.
+* Living Portrait implementation.
+* Parent Reflection Coach implementation.
+* Parent debrief implementation.
 
 ---
 
@@ -270,13 +282,69 @@ Recommended conversation goals:
 * Notice small moments.
 * Create anticipation for tomorrow.
 
-Emotional intensity should be balanced:
+Question families should become first-class prompt metadata. Recommended `question_family` values:
 
-* Low intensity: silly, favorites, daily life, imagination, small memories.
-* Medium intensity: friendship, courage, change, gratitude, hopes.
-* Higher intensity: feelings, worries, meaning, independence, regret, conflict.
+* `relationship_mirror` - helps the child reflect on the parent-child relationship.
+* `inner_world` - helps the parent understand the child's lived experience.
+* `imagination_doorway` - creates wonder, play, and children's-book-like magic.
+* `memory_preserving` - creates heirloom value by preserving childhood in the child's own words.
+* `becoming` - helps parents notice growth without labeling the child.
+* `silly_to_deep` - starts playful but can become meaningful.
 
-High-intensity prompts should be rare and should never require disclosure. The default rhythm should be warm, varied, and sustainable, not deep every day.
+`question_family` should be internal metadata for curation, rotation, and future candidate review. It should not create a parent-facing taxonomy unless a later UX brief explicitly designs that surface.
+
+Question depth should be balanced:
+
+* `light`: fun, easy, silly, low emotional demand.
+* `medium`: reflective, story-based, memory-building.
+* `deep`: identity, relationship, vulnerability, meaning, legacy.
+
+Recommended rhythm:
+
+* 70% light, fun, or curious.
+* 20% reflective or memory-building.
+* 10% deep or relationship-opening.
+
+Deep prompts should be rare and should never require disclosure. The default rhythm should be warm, varied, and sustainable, not deep every day.
+
+---
+
+Golden Questions
+
+Golden Questions are especially effective real-world questions that reveal the product's editorial taste. They should be documented as reference examples for prompt curation, seed review, and future AI candidate evaluation.
+
+A Golden Question record should include:
+
+* Question text.
+* Age fit.
+* Question family.
+* Depth.
+* Why it worked.
+* Risks.
+* Softer variants.
+* Recommended frequency.
+
+Guiding example:
+
+"How is it to have a father like me?"
+
+This is a deep `relationship_mirror` question. It worked because it gave the child authority, invited honesty, treated the child's perspective as valuable, and created room for stories. It is powerful precisely because it is direct and relational.
+
+Risks:
+
+* It can feel emotionally demanding.
+* It can put the child in the position of caring for the parent's feelings.
+* It can feel too intense if asked casually, too often, or at the wrong moment.
+
+Softer variants:
+
+* What is something I do that helps you feel understood?
+* When do you feel like I really listen to you?
+* What is one thing about being in our family that you hope we always keep?
+
+Recommended frequency:
+
+Use rarely. Deep relationship mirror questions should be occasional invitations, not daily ritual defaults.
 
 ---
 
@@ -288,8 +356,9 @@ Selection should consider:
 
 * Recent prompt text.
 * Recent prompt category.
+* Recent question family.
 * Recent conversation goal.
-* Emotional intensity.
+* Question depth.
 * Age-band fit.
 * Whether the child recently received a follow-up.
 * Whether the prompt is all-age or age-specific.
@@ -298,7 +367,7 @@ Recommended rotation principles:
 
 * Avoid repeating the same prompt for a child within a long window.
 * Avoid asking the same category several days in a row when alternatives exist.
-* Avoid too many reflective or emotional prompts in a short period.
+* Avoid too many reflective or deep prompts in a short period.
 * Keep playful and ordinary prompts in the mix.
 * Use follow-ups occasionally, not as the default daily experience.
 * Prefer normal curated prompts when a child has few saved memories, when safe context is unavailable, or when a follow-up would feel forced.
@@ -357,7 +426,7 @@ Recommended dimensions:
 * Warmth: Does it feel like something a caring parent might ask?
 * Askability aloud: Can a parent say it naturally without awkward setup?
 * Novelty: Does it avoid sounding like a generic prompt deck?
-* Emotional safety: Does it avoid pressure, diagnosis, intensity, and sensitive disclosure?
+* Emotional safety: Does it avoid pressure, diagnosis, excessive depth, and sensitive disclosure?
 * Conversation potential: Is it likely to create more than a one-word answer?
 * Playfulness: Does it leave room for fun when appropriate?
 * Specificity: Does it include a concrete anchor without requiring private knowledge?
@@ -365,7 +434,7 @@ Recommended dimensions:
 * Memory potential: Could the answer become a meaningful saved memory?
 * Non-clinical tone: Does it avoid therapy, assessment, schoolwork, and labels?
 * Freshness: Is it meaningfully different from recent prompts?
-* Intensity balance: Does it fit the current prompt rhythm?
+* Depth balance: Does it fit the current prompt rhythm?
 
 Suggested internal rating shape:
 
@@ -377,7 +446,7 @@ Optional internal scoring can exist for tooling, but the product should prefer s
 
 Deterministic or AI-assisted:
 
-* Deterministic checks should catch required metadata, forbidden terms, missing age/category fields, inactive draft status, repeat windows, and intensity balance.
+* Deterministic checks should catch required metadata, forbidden terms, missing age/category/family/depth fields, inactive draft status, repeat windows, and depth balance.
 * AI-assisted checks may help evaluate tone, askability, genericness, and age fit.
 * Human review remains the publishing control.
 
@@ -402,8 +471,10 @@ Input context shape:
 * Broad age band.
 * Selected category.
 * Desired conversation goal.
-* Desired emotional intensity.
+* Desired question family.
+* Desired question depth.
 * Recent prompt categories.
+* Recent question families.
 * Recent selected prompt texts.
 * Approved prompt pattern or seed prompt.
 * Limited safe memory context only for a later approved slice.
@@ -413,9 +484,10 @@ Candidate output format:
 
 * `question_text`
 * `category`
+* `question_family`
 * `conversation_goal`
 * `age_band`
-* `emotional_intensity`
+* `question_depth`
 * `quality_rationale`
 * `safety_notes`
 * `review_status_recommendation`
@@ -455,7 +527,8 @@ Allowed context for future AI-assisted prompt quality:
 * Safe curated prompt metadata.
 * Approved prompt patterns.
 * Desired conversation goal.
-* Desired emotional intensity.
+* Desired question family.
+* Desired question depth.
 * Short parent-saved text excerpts in a later slice only if explicitly approved.
 
 Excluded context:
@@ -485,7 +558,8 @@ Extend `DailyQuestion`:
 
 * `age_band` or structured age-band metadata.
 * `conversation_goal`.
-* `emotional_intensity`.
+* `question_family`.
+* `question_depth`.
 * `quality_status`.
 * `review_status`.
 * `prompt_pattern`.
@@ -498,7 +572,8 @@ Extend `DailyQuestion`:
 Possible values:
 
 * `conversation_goal`: storytelling, memory, laughter, imagination, connection, reflection, curiosity, gratitude, anticipation.
-* `emotional_intensity`: low, medium, high.
+* `question_family`: relationship_mirror, inner_world, imagination_doorway, memory_preserving, becoming, silly_to_deep.
+* `question_depth`: light, medium, deep.
 * `review_status`: draft, needs_revision, approved, rejected, retired.
 * `source`: human_curated, ai_draft, ai_adapted, imported_seed.
 
@@ -647,7 +722,7 @@ UX principles:
 * Keep the first screen focused on the ritual.
 * Do not expose rubric scores.
 * Do not expose internal AI reasoning.
-* Do not make parents tune categories, intensity, or age bands during MVP.
+* Do not make parents tune categories, depth, families, or age bands during MVP.
 * Do not imply the app knows the child better than the parent.
 * Let question quality be felt through better questions, not explained through UI.
 
@@ -657,23 +732,27 @@ Recommended Implementation Slices
 
 Stage 8A: Question Quality Rubric & Prompt Metadata
 
-* Refine or add metadata for age band, category, conversation goal, intensity, quality notes, and review status.
+* Refine or add metadata for age band, category, question family, conversation goal, question depth, quality notes, and review status.
 * Add validations for allowed values.
 * Add internal documentation for the rubric.
 * No AI calls.
+* No AI-generated prompts.
 * No parent-facing scores.
+* No summaries.
+* No Living Portrait implementation.
+* No Parent Reflection Coach implementation.
 * No behavior change beyond safer prompt eligibility if needed.
 
 Stage 8B: Prompt Library Expansion
 
 * Add a stronger curated seed set based on the rubric.
 * Use human-crafted questions first.
-* Ensure coverage across age bands, categories, goals, and intensity levels.
+* Ensure coverage across age bands, categories, families, goals, and depth levels.
 * Keep active prompts reviewed.
 
 Stage 8C: Question Quality Evaluator
 
-* Add a deterministic internal evaluator for required metadata, forbidden terms, intensity, and repeat risk.
+* Add a deterministic internal evaluator for required metadata, forbidden terms, depth, and repeat risk.
 * Optionally add AI-assisted evaluation only after provider/privacy review.
 * Keep evaluator output internal.
 * Do not block the ritual unless a prompt is unsafe or inactive.
@@ -713,11 +792,15 @@ Acceptance Criteria For Stage 8A
 Before Stage 8A is considered complete:
 
 * The prompt quality rubric exists as durable documentation.
-* The app has a clear set of allowed categories, conversation goals, and emotional intensity values.
+* The app has a clear set of allowed categories, question families, conversation goals, and question depth values.
 * Any new prompt metadata is internal and not exposed as parent-facing scores.
 * Existing daily selection and capture continuity still work.
 * Prompt snapshots still preserve what the parent saw.
 * No AI provider calls are introduced.
+* No AI-generated prompts are introduced.
+* No AI summaries are introduced.
+* No Living Portrait implementation is introduced.
+* No Parent Reflection Coach implementation is introduced.
 * No voice recordings, transcripts, full archives, or sensitive memories are sent to AI.
 * No child profiles, personality labels, developmental claims, dashboards, scores, streaks, or badges are added.
 * Tests cover any model validations, seed behavior, and selection behavior changed by the slice.
@@ -767,13 +850,22 @@ Parent review remains required before AI-assisted content becomes active or dura
 Open Questions
 
 * Should the first Stage 8 implementation slice be metadata and rubric only?
-* Should AI-generated prompts ever be shown without human review? Recommended answer: no.
+  Recommended answer: yes. Stage 8A should be rubric documentation and metadata refinement only, with no AI calls and no generated prompts.
+* Should AI-generated prompts ever be shown without human review?
+  Recommended answer: no for MVP. AI-generated prompts should remain draft/inactive until reviewed, or be generated offline and committed through seeds.
 * Should AI candidate prompts be stored in the app, or generated offline and committed through seeds first?
+  Recommended answer: for MVP, generate offline or in developer/admin tooling and commit through reviewed seeds first. App-level candidate storage can wait until there is a real review workflow.
 * Are four age bands enough for MVP?
-* Should emotional intensity be tracked as required metadata?
+  Recommended answer: yes. Use broad bands for now: 4-6, 7-9, 10-12, 13-15. Keep all-age prompts available.
+* Should question depth be tracked as required metadata?
+  Recommended answer: yes. Track `question_depth` with values `light`, `medium`, and `deep`.
 * Should parent feedback influence future question selection before or after AI summaries?
-* Should question quality improvements ship before AI summaries? Recommended answer: yes.
+  Recommended answer: after the question metadata/rubric foundation, but before full AI summaries if kept lightweight. Start only with simple product signals later, such as answered, chose another, skipped, voice included, or saved memory. Do not add dashboards or analytics.
+* Should question quality improvements ship before AI summaries?
+  Recommended answer: yes. Better questions create better conversations, and better conversations create better source material for future summaries.
 * How much child memory context is appropriate for prompt adaptation in a later slice?
+  Recommended answer: start with no memory text in Stage 8A. Later, allow only small, parent-authorized, current-child, safe text excerpts. No full archive, raw voice, unreviewed transcripts, sensitive memories, or cross-child context.
 * Does the MVP need an internal admin review UI, or are seeds and code review enough for now?
+  Recommended answer: seeds and code review are enough for now. Add admin review UI only when prompt volume or AI candidate workflow makes seed review too slow.
 * Should follow-up questions and general daily prompts share the same quality rubric?
-
+  Recommended answer: yes. They should share the same core rubric, but follow-ups need additional checks for source safety, specificity, repeat avoidance, and not sounding surveillance-like.
