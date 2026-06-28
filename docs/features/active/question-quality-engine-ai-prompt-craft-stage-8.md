@@ -2,7 +2,7 @@
 
 Status
 
-Draft. Do not implement until reviewed and approved.
+Stage 8A implemented. Stage 8B and later remain draft; do not implement later slices until reviewed and approved.
 
 ---
 
@@ -804,6 +804,22 @@ Before Stage 8A is considered complete:
 * No voice recordings, transcripts, full archives, or sensitive memories are sent to AI.
 * No child profiles, personality labels, developmental claims, dashboards, scores, streaks, or badges are added.
 * Tests cover any model validations, seed behavior, and selection behavior changed by the slice.
+
+---
+
+Stage 8A Implementation Notes
+
+Stage 8A implemented the first non-AI editorial metadata foundation:
+
+* `DailyQuestion` now stores internal `question_family`, `question_depth`, `conversation_goal`, `review_status`, and `quality_notes` metadata.
+* `question_family` is constrained to `relationship_mirror`, `inner_world`, `imagination_doorway`, `memory_preserving`, `becoming`, and `silly_to_deep`.
+* `question_depth` is constrained to `light`, `medium`, and `deep`.
+* `conversation_goal` is constrained to `storytelling`, `memory`, `laughter`, `imagination`, `connection`, `reflection`, `curiosity`, `gratitude`, and `anticipation`.
+* `review_status` is constrained to `draft`, `needs_revision`, `approved`, `rejected`, and `retired`.
+* Existing curated seed prompts now receive valid internal question-quality metadata and remain active/reviewed.
+* The existing `category` field was preserved rather than replaced with the larger future category taxonomy, because Stage 8A is metadata/rubric foundation only and should not become Stage 8B prompt-library expansion.
+* Daily question selection behavior, prompt snapshots, curated follow-up behavior, and parent-facing UX were not changed.
+* No AI calls, AI-generated prompts, AI candidate storage, summaries, Living Portrait, Parent Reflection Coach, parent debrief, dashboards, scores, streaks, badges, labels, or clinical language were introduced.
 
 ---
 

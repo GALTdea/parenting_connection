@@ -38,6 +38,34 @@ RSpec.describe DailyQuestion, type: :model do
       expect(daily_question.errors[:category]).to include("is not included in the list")
     end
 
+    it 'requires an allowed question family' do
+      daily_question = build(:daily_question, question_family: "personality_profile")
+
+      expect(daily_question).not_to be_valid
+      expect(daily_question.errors[:question_family]).to include("is not included in the list")
+    end
+
+    it 'requires an allowed question depth' do
+      daily_question = build(:daily_question, question_depth: "intense")
+
+      expect(daily_question).not_to be_valid
+      expect(daily_question.errors[:question_depth]).to include("is not included in the list")
+    end
+
+    it 'requires an allowed conversation goal' do
+      daily_question = build(:daily_question, conversation_goal: "assessment")
+
+      expect(daily_question).not_to be_valid
+      expect(daily_question.errors[:conversation_goal]).to include("is not included in the list")
+    end
+
+    it 'requires an allowed review status' do
+      daily_question = build(:daily_question, review_status: "auto_published")
+
+      expect(daily_question).not_to be_valid
+      expect(daily_question.errors[:review_status]).to include("is not included in the list")
+    end
+
     it 'requires tags to use the allowed list' do
       daily_question = build(:daily_question, tags: %w[quick anxious])
 

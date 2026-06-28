@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_26_030000) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_28_001452) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -80,12 +80,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_26_030000) do
     t.boolean "active", default: true, null: false
     t.text "age_guidance"
     t.string "category", null: false
+    t.string "conversation_goal", default: "storytelling", null: false
     t.datetime "created_at", null: false
     t.text "internal_notes"
     t.integer "max_age_years"
     t.integer "min_age_years"
     t.integer "position"
     t.text "prompt", null: false
+    t.text "quality_notes"
+    t.string "question_depth", default: "light", null: false
+    t.string "question_family", default: "inner_world", null: false
+    t.string "review_status", default: "approved", null: false
     t.string "slug", null: false
     t.string "tags", default: [], null: false, array: true
     t.datetime "updated_at", null: false

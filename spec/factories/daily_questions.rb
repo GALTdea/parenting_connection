@@ -4,6 +4,10 @@ FactoryBot.define do
     sequence(:prompt) { |number| "What made you smile today? #{number}" }
     active { true }
     category { "daily_life" }
+    question_family { "inner_world" }
+    question_depth { "light" }
+    conversation_goal { "storytelling" }
+    review_status { "approved" }
     tags { [] }
     sequence(:position)
   end

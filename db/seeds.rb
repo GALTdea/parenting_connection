@@ -76,9 +76,46 @@ daily_questions = [
   { slug: "if-you-could-ask-tomorrow-one-question-what-would-it-be", prompt: "If you could ask tomorrow one question, what would it be?", category: "imagination", tags: %w[wonder], position: 44 }
 ]
 
+question_quality_defaults = {
+  "daily_life" => {
+    question_family: "inner_world",
+    question_depth: "light",
+    conversation_goal: "storytelling"
+  },
+  "feelings" => {
+    question_family: "inner_world",
+    question_depth: "medium",
+    conversation_goal: "reflection"
+  },
+  "imagination" => {
+    question_family: "imagination_doorway",
+    question_depth: "light",
+    conversation_goal: "imagination"
+  },
+  "relationships" => {
+    question_family: "relationship_mirror",
+    question_depth: "medium",
+    conversation_goal: "connection"
+  },
+  "growth" => {
+    question_family: "becoming",
+    question_depth: "medium",
+    conversation_goal: "reflection"
+  },
+  "memory" => {
+    question_family: "memory_preserving",
+    question_depth: "medium",
+    conversation_goal: "memory"
+  }
+}
+
 daily_questions.each do |attributes|
   question = DailyQuestion.find_or_initialize_by(slug: attributes.fetch(:slug))
-  question.assign_attributes(attributes.merge(active: true))
+  question.assign_attributes(
+    question_quality_defaults.fetch(attributes.fetch(:category))
+      .merge(review_status: "approved", active: true)
+      .merge(attributes)
+  )
   question.save!
 end
 puts "  daily questions: #{DailyQuestion.count}"

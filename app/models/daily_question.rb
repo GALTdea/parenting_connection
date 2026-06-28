@@ -23,9 +23,48 @@ class DailyQuestion < ApplicationRecord
     story
   ].freeze
 
+  QUESTION_FAMILIES = %w[
+    relationship_mirror
+    inner_world
+    imagination_doorway
+    memory_preserving
+    becoming
+    silly_to_deep
+  ].freeze
+
+  QUESTION_DEPTHS = %w[
+    light
+    medium
+    deep
+  ].freeze
+
+  CONVERSATION_GOALS = %w[
+    storytelling
+    memory
+    laughter
+    imagination
+    connection
+    reflection
+    curiosity
+    gratitude
+    anticipation
+  ].freeze
+
+  REVIEW_STATUSES = %w[
+    draft
+    needs_revision
+    approved
+    rejected
+    retired
+  ].freeze
+
   validates :slug, presence: true, uniqueness: true
   validates :prompt, presence: true, uniqueness: true
   validates :category, presence: true, inclusion: { in: CATEGORIES }
+  validates :question_family, presence: true, inclusion: { in: QUESTION_FAMILIES }
+  validates :question_depth, presence: true, inclusion: { in: QUESTION_DEPTHS }
+  validates :conversation_goal, presence: true, inclusion: { in: CONVERSATION_GOALS }
+  validates :review_status, presence: true, inclusion: { in: REVIEW_STATUSES }
   validates :position, numericality: { only_integer: true }, allow_nil: true
   validates :min_age_years,
     numericality: { only_integer: true, greater_than_or_equal_to: 0 },

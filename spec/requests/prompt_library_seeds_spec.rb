@@ -12,6 +12,11 @@ RSpec.describe 'prompt library seeds' do
     DailyQuestion::CATEGORIES.each do |category|
       expect(active_questions.where(category: category).count).to be >= 4
     end
+
+    expect(active_questions.where(question_family: DailyQuestion::QUESTION_FAMILIES).count).to eq(active_questions.count)
+    expect(active_questions.where(question_depth: DailyQuestion::QUESTION_DEPTHS).count).to eq(active_questions.count)
+    expect(active_questions.where(conversation_goal: DailyQuestion::CONVERSATION_GOALS).count).to eq(active_questions.count)
+    expect(active_questions.where(review_status: "approved").count).to eq(active_questions.count)
   end
 
   it 'upserts prompts by slug without duplicating records' do

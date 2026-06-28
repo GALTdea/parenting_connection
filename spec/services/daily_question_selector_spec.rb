@@ -37,6 +37,9 @@ RSpec.describe DailyQuestionSelector do
       expect(selection.daily_question).to eq(question)
       expect(selection.source_type).to eq("curated")
       expect(selection.presented_prompt).to eq("What made you smile today?")
+      expect(question.question_family).to eq("inner_world")
+      expect(question.question_depth).to eq("light")
+      expect(question.conversation_goal).to eq("storytelling")
     end
 
     it 'creates a template follow-up selection for an eligible child' do
