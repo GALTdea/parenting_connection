@@ -2,7 +2,7 @@
 
 Status
 
-Stage 8A implemented. Stage 8B and later remain draft; do not implement later slices until reviewed and approved.
+Stage 8A and Stage 8B implemented. Stage 8C and later remain draft; do not implement later slices until reviewed and approved.
 
 ---
 
@@ -818,6 +818,22 @@ Stage 8A implemented the first non-AI editorial metadata foundation:
 * `review_status` is constrained to `draft`, `needs_revision`, `approved`, `rejected`, and `retired`.
 * Existing curated seed prompts now receive valid internal question-quality metadata and remain active/reviewed.
 * The existing `category` field was preserved rather than replaced with the larger future category taxonomy, because Stage 8A is metadata/rubric foundation only and should not become Stage 8B prompt-library expansion.
+* Daily question selection behavior, prompt snapshots, curated follow-up behavior, and parent-facing UX were not changed.
+* No AI calls, AI-generated prompts, AI candidate storage, summaries, Living Portrait, Parent Reflection Coach, parent debrief, dashboards, scores, streaks, badges, labels, or clinical language were introduced.
+
+---
+
+Stage 8B Implementation Notes
+
+Stage 8B expanded and improved the human-curated prompt library using Stage 8A metadata:
+
+* The seed library now contains 68 curated active prompts in a clean seed load.
+* A small number of weaker existing prompts were polished while preserving their slugs.
+* New prompts were added across all approved `question_family` values: `relationship_mirror`, `inner_world`, `imagination_doorway`, `memory_preserving`, `becoming`, and `silly_to_deep`.
+* New prompts were added across `question_depth` values while keeping deep prompts present but not dominant.
+* New prompts include broader age guidance for 4-6, 7-9, 10-12, and 13-15 without making developmental claims.
+* Golden Questions were added as approved seed prompts with internal `quality_notes`, including "How is it to have a father like me?" as a rare older-child deep `relationship_mirror` prompt.
+* Seed specs now verify metadata validity, family coverage, depth coverage, deep-prompt restraint, broad age eligibility, forbidden clinical/surveillance language, Golden Question notes, and idempotent seed loading.
 * Daily question selection behavior, prompt snapshots, curated follow-up behavior, and parent-facing UX were not changed.
 * No AI calls, AI-generated prompts, AI candidate storage, summaries, Living Portrait, Parent Reflection Coach, parent debrief, dashboards, scores, streaks, badges, labels, or clinical language were introduced.
 
