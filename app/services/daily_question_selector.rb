@@ -92,7 +92,7 @@ class DailyQuestionSelector
   end
 
   def active_questions
-    DailyQuestion.active
+    DailyQuestion.approved_for_selection
   end
 
   def without_recent_repeats(scope)

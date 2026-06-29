@@ -2,7 +2,7 @@
 
 Status
 
-Stage 8A and Stage 8B implemented. Stage 8C and later remain draft; do not implement later slices until reviewed and approved.
+Stage 8A, Stage 8B, and Stage 8C implemented. Stage 8D and later remain draft; do not implement later slices until reviewed and approved.
 
 ---
 
@@ -836,6 +836,30 @@ Stage 8B expanded and improved the human-curated prompt library using Stage 8A m
 * Seed specs now verify metadata validity, family coverage, depth coverage, deep-prompt restraint, broad age eligibility, forbidden clinical/surveillance language, Golden Question notes, and idempotent seed loading.
 * Daily question selection behavior, prompt snapshots, curated follow-up behavior, and parent-facing UX were not changed.
 * No AI calls, AI-generated prompts, AI candidate storage, summaries, Living Portrait, Parent Reflection Coach, parent debrief, dashboards, scores, streaks, badges, labels, or clinical language were introduced.
+
+---
+
+Stage 8C Implementation Notes
+
+Stage 8C added a deterministic, internal-only question quality evaluator:
+
+* The evaluator lives at `app/services/daily_questions/question_quality_evaluator.rb`.
+* The evaluator is callable with `DailyQuestions::QuestionQualityEvaluator.new(scope: DailyQuestion.active).call`.
+* It returns a result object with `passed?`, `errors`, `warnings`, and `summary`.
+* Hard errors cover missing/invalid metadata, active unapproved prompts, blank prompt text, non-question-like prompt text, overlong prompt text, invalid age bounds, and forbidden clinical/surveillance language.
+* Warnings cover ambiguous sensitive language, missing family/depth coverage, deep prompt overuse, relationship mirror overuse, too few light prompts, too few all-age prompts, and missing internal notes on deep prompts.
+* The seeded prompt library is expected to pass with no errors and no warnings.
+* Normal daily selection now uses `DailyQuestion.approved_for_selection`, which means new curated selections require `active: true` and `review_status: approved`.
+* Existing same-day selections remain stable even if a prompt later becomes inactive or unapproved.
+* Evaluator output is not exposed in parent-facing UI and does not run on parent requests.
+* No AI calls, AI-assisted evaluation, AI-generated prompts, AI candidate storage, summaries, Living Portrait, Parent Reflection Coach, parent debrief, dashboards, scores, streaks, badges, labels, or clinical language were introduced.
+
+Deferred:
+
+* Stage 8D AI-assisted candidate generation.
+* Stage 8E AI-assisted daily selection.
+* Stage 8F AI-assisted follow-up adaptation.
+* Any internal/admin review UI or rake task for evaluator reporting.
 
 ---
 

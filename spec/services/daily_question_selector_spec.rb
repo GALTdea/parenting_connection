@@ -130,12 +130,33 @@ RSpec.describe DailyQuestionSelector do
       expect(question).to be_nil
     end
 
+    it 'does not newly select active questions that are not approved' do
+      child_profile = create(:child_profile)
+      create(:daily_question, prompt: "What is still a draft today?", review_status: "draft")
+
+      question = described_class.new(child_profile: child_profile, date: Date.new(2026, 6, 26)).question
+
+      expect(question).to be_nil
+    end
+
     it 'keeps a same-day selection stable when the question is later inactive' do
       child_profile = create(:child_profile)
       selected_question = create(:daily_question, prompt: "What made you smile today?")
 
       first_question = described_class.new(child_profile: child_profile, date: Date.new(2026, 6, 26)).question
       selected_question.update!(active: false)
+      second_question = described_class.new(child_profile: child_profile, date: Date.new(2026, 6, 26)).question
+
+      expect(first_question).to eq(selected_question)
+      expect(second_question).to eq(selected_question)
+    end
+
+    it 'keeps a same-day selection stable when the question is later unapproved' do
+      child_profile = create(:child_profile)
+      selected_question = create(:daily_question, prompt: "What made you smile today?")
+
+      first_question = described_class.new(child_profile: child_profile, date: Date.new(2026, 6, 26)).question
+      selected_question.update!(review_status: "retired")
       second_question = described_class.new(child_profile: child_profile, date: Date.new(2026, 6, 26)).question
 
       expect(first_question).to eq(selected_question)

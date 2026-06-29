@@ -76,6 +76,7 @@ class DailyQuestion < ApplicationRecord
   validate :tags_must_be_allowed
 
   scope :active, -> { where(active: true) }
+  scope :approved_for_selection, -> { active.where(review_status: "approved") }
   scope :ordered, -> { order(:position, :prompt) }
 
   def self.age_eligible(age_years)

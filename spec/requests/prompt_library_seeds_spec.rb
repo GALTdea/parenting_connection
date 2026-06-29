@@ -76,6 +76,16 @@ RSpec.describe 'prompt library seeds' do
     expect(golden_questions.pluck(:quality_notes)).to all(be_present)
   end
 
+  it 'passes the deterministic question quality evaluator' do
+    load Rails.root.join("db/seeds.rb")
+
+    result = DailyQuestions::QuestionQualityEvaluator.new(scope: DailyQuestion.active).call
+
+    expect(result).to be_passed
+    expect(result.errors).to be_empty
+    expect(result.warnings).to be_empty
+  end
+
   it 'upserts prompts by slug without duplicating records' do
     load Rails.root.join("db/seeds.rb")
     count_after_first_load = DailyQuestion.count
